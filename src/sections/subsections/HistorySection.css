@@ -1,0 +1,164 @@
+/* src/sections/subsections/HistorySection.css */
+
+#history .sub-section {
+  position: relative;
+  overflow: hidden;
+}
+
+#history .navigation {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+#history .nav-buttons button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #444;
+}
+
+#history .nav-buttons button:hover:not(:disabled) {
+  border-color: #2e9d41;
+  color: #2e9d41;
+}
+
+/* 타임라인 메인 구조 */
+#history .timeline-wrapper {
+  position: relative;
+  padding: 60px 0;
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: none; 
+  scrollbar-width: none; 
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: auto; 
+}
+
+#history .timeline-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+#history .timeline-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 65px; 
+  left: 0;
+  width: 1000%; 
+  height: 1px;
+  background-color: #2e9d41;
+  z-index: 1;
+}
+
+#history .timeline-track {
+  display: flex;
+  width: max-content;
+}
+
+/* 데스크톱: 한 화면에 2개 보이기 */
+#history .timeline-item {
+  flex: 0 0 50vw;
+  padding-top: 40px;
+  position: relative;
+  /* 패딩 유지 및 반응형 미세 조정 */
+  padding-left: clamp(20px, 5vw, 60px); 
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+#history .timeline-dot.dot {
+  position: absolute;
+  top: -1px; 
+  left: clamp(20px, 5vw, 60px);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #2e9d41 !important;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px #2e9d41;
+  z-index: 10;
+}
+
+/* [수정] 연도 폰트 사이즈 반응형 적용 */
+#history .year-title.year {
+  font-size: clamp(40px, 8vw, 80px); 
+  font-weight: 850;
+  color: #2e9d41;
+  margin: 10px 0 40px 0; 
+  line-height: 1;
+  letter-spacing: -3px;
+}
+
+#history .event-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+#history .event-item {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 25px; 
+}
+
+/* [수정] 월 폰트 사이즈 반응형 적용 */
+#history .month {
+  font-size: clamp(16px, 2vw, 18px);
+  font-weight: 800;
+  color: #111;
+  min-width: 40px;
+  margin-right: 30px;
+  flex-shrink: 0;
+  line-height: 1.6;
+}
+
+/* [수정] 내용 폰트 사이즈 및 모바일 줄바꿈(word-break) 적용 */
+#history .content.multi-column {
+  flex: 1;
+  column-count: 1; 
+  font-size: clamp(14px, 1.6vw, 16px);
+  color: #555;
+  line-height: 1.7;
+  text-align: left;
+  /* 단어 단위 줄바꿈 유지하며 넘침 방지 */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 900px) {
+  #history .timeline-item {
+    flex: 0 0 100vw; /* 모바일 한 칸 */
+  }
+  
+  #history .year-title.year {
+    font-size: clamp(36px, 12vw, 50px);
+    letter-spacing: -1px;
+  }
+
+  /* 모바일에서 월과 내용의 간격 미세 조정 */
+  #history .month {
+    margin-right: 15px;
+    min-width: 35px;
+  }
+}
+
+/* [추가] 480px 이하 아주 작은 화면에서 글자 겹침 방지 */
+@media (max-width: 480px) {
+  #history .event-item {
+    flex-direction: column; /* 세로 배치로 전환하여 가독성 확보 */
+  }
+  #history .month {
+    margin-bottom: 5px;
+  }
+}

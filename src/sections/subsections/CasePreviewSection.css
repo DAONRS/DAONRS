@@ -1,0 +1,202 @@
+/* src/sections/subsections/CasePreviewSection.css */
+
+.case-preview-body {
+    width: 100%;
+    margin-top: 40px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.portfolio-intro {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.portfolio-sub {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: #888;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.portfolio-main {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #111;
+    margin: 0;
+}
+
+/* --- 스위퍼와 화살표 컨테이너: 반응형 간격 적용 --- */
+.custom-swiper-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 화면이 작아질수록 간격도 줄어듦 */
+    gap: clamp(10px, 3vw, 40px); 
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.swiper-mask {
+    flex: 1;
+    min-width: 0; /* 컨테이너 압박 시 내부 요소 밀림 방지 */
+    max-width: 800px;
+    overflow: visible; 
+    position: relative;
+}
+
+.case-single-swiper {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.case-slide-item {
+    cursor: pointer;
+}
+
+.case-img-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #f8f8f8;
+    border-radius: 12px;
+}
+
+.case-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.case-slide-item:hover .case-img-wrapper img {
+    transform: scale(1.05);
+}
+
+.case-text-wrapper {
+    padding: 30px 0 10px 0;
+    text-align: center;
+}
+
+.case-item-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #111;
+}
+
+/* --- 하단 "더 많은 사례 보러가기" 버튼: 위치 반응형 수정 --- */
+.view-more-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    position: relative;
+    width: 100%;
+}
+
+.view-more-link {
+    background: #111;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* 중요: 화면 너비에 따라 우측 돌출 정도를 자동으로 조절 */
+    /* 1200px 이상에선 -40px 유지, 화면이 좁아지면 0으로 수렴 */
+    margin-right: clamp(0px, calc((100vw - 1000px) / 5 * -1), -40px);
+    
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    z-index: 5;
+    white-space: nowrap;
+}
+
+.view-more-link:hover {
+    background: #333;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.view-more-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+
+.view-more-link:hover .view-more-icon {
+    transform: translateX(5px);
+}
+
+/* --- 네비게이션 버튼: 너비 반응형 대응 --- */
+.nav-btn-custom {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1.5vw, 15px);
+    cursor: pointer;
+    min-width: fit-content; 
+    padding: 10px;
+    transition: opacity 0.3s;
+    flex-shrink: 0; /* 버튼 형태 유지 */
+}
+
+.nav-btn-custom:hover {
+    opacity: 0.6;
+}
+
+.label-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.label-group.align-right { text-align: right; }
+
+.label-top { 
+    font-size: clamp(0.65rem, 0.8vw, 0.75rem); 
+    color: #999; 
+    font-weight: 700; 
+}
+.label-bottom { 
+    font-size: clamp(0.8rem, 1vw, 0.9rem); 
+    color: #111; 
+    font-weight: 600; 
+    margin-top: 2px; 
+    white-space: nowrap;
+}
+
+.arrow {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* 모바일 및 저해상도 태블릿 대응 */
+@media (max-width: 1024px) {
+    .nav-btn-custom { display: none; }
+    .custom-swiper-container { gap: 0; }
+    .swiper-mask { max-width: 100%; padding: 0 10px; }
+    .view-more-link { 
+        margin-right: 0; 
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}

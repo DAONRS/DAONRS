@@ -1,0 +1,136 @@
+.scope-timeline-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 40px 0;
+  overflow: hidden;
+}
+
+/* 중앙 선 */
+.scope-timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #d1d1d1;
+  transform: translateX(-50%);
+}
+
+.scope-timeline-item {
+  position: relative;
+  width: 100%;
+  margin-bottom: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scope-timeline-item.scope-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scope-timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border: 4px solid #1b5e20;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(27, 94, 32, 0.2);
+}
+
+/* 카드 공통 스타일 */
+.scope-text-card, .scope-image-card {
+  width: 44%;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0; 
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  overflow: hidden;
+}
+
+.scope-text-card {
+  padding: 40px;
+  text-align: left;
+}
+
+/* 좌우 엇갈림 배치 */
+.scope-timeline-item.left { flex-direction: row; }
+.scope-timeline-item.right { flex-direction: row-reverse; }
+
+/* 호버 효과 */
+.scope-text-card:hover, .scope-image-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border-color: #1b5e20;
+}
+
+.scope-title-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-family: "Motiva Sans Bold";
+  font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+  color: #111;
+  margin-bottom: 20px;
+}
+
+.scope-icon-wrapper {
+  color: #1b5e20;
+  font-size: 2rem;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.scope-text-card p {
+  color: #555;
+  line-height: 1.8;
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+  word-break: keep-all;
+}
+
+.scope-image-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background-color: #f8f9fa;
+}
+
+.scope-filled-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.scope-image-card:hover .scope-filled-image {
+  transform: scale(1.1);
+}
+
+/* 모바일 대응 */
+@media (max-width: 1023px) {
+  .scope-timeline-line { left: 20px; transform: none; }
+  .scope-timeline-dot { left: 20px; top: 30px; transform: translateX(-50%); }
+
+  .scope-timeline-item {
+    flex-direction: column !important;
+    align-items: flex-start;
+    padding-left: 55px;
+    gap: 25px;
+    margin-bottom: 70px;
+  }
+
+  .scope-text-card, .scope-image-card {
+    width: 100%;
+  }
+}

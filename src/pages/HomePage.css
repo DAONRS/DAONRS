@@ -1,0 +1,192 @@
+/* src/pages/HomePage.css */
+
+.homepage-banner-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh; 
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.homepage-swiper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1; 
+  overflow: hidden;
+}
+
+.homepage-swiper .swiper-slide {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+
+/* 배경 이미지 및 Ken Burns 애니메이션 유지 */
+.slide-bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  transform: scale(1.05);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.swiper-slide-active .slide-bg-image {
+  animation: kenBurns 6.5s ease-out forwards;
+}
+
+@keyframes kenBurns {
+  from { transform: scale(1.05); }
+  to { transform: scale(1.15); }
+}
+
+.homepage-swiper .swiper-slide::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+/* 텍스트 컨텐츠 애니메이션 유지 */
+.homepage-swiper .slide-content {
+  position: relative;
+  z-index: 10;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 30vh; 
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.5s ease;
+  max-width: 90%;
+  box-sizing: border-box;
+}
+
+.swiper-slide-active .slide-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 1.2s ease-out 0.5s; 
+}
+
+.homepage-swiper .slide-content h2 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  margin-bottom: 15px;
+  word-break: keep-all;
+}
+
+.homepage-swiper .slide-content p {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+.banner-detail-link-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 12px 28px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(4px);
+  border-radius: 30px;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.banner-detail-link-inline:hover {
+  background-color: #ff5e1a;
+  border-color: #ff5e1a;
+  transform: translateY(-3px);
+}
+
+/* --- 버튼 컨테이너 및 네비게이션 버튼 복구 --- */
+.swiper-controls-container {
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  padding-right: clamp(20px, 5vw, 60px); 
+  padding-left: clamp(20px, 5vw, 60px);
+  pointer-events: none;
+}
+
+.swiper-navigation-buttons {
+  display: flex;
+  gap: 20px;
+  pointer-events: auto;
+}
+
+.swiper-button-prev-custom,
+.swiper-button-next-custom {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.swiper-button-prev-custom::after { content: '❮'; font-size: 20px; }
+.swiper-button-next-custom::after { content: '❯'; font-size: 20px; }
+
+.swiper-button-prev-custom:hover,
+.swiper-button-next-custom:hover {
+  background-color: #ff5e1a;
+  border-color: #ff5e1a;
+  transform: scale(1.1);
+}
+
+.swiper-pagination-custom {
+  position: absolute;
+  bottom: 40px !important;
+  left: 50% !important;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .swiper-controls-container {
+    bottom: 30px;
+    justify-content: center;
+    padding: 0;
+  }
+  .swiper-button-prev-custom,
+  .swiper-button-next-custom {
+    width: 50px;
+    height: 50px;
+  }
+}

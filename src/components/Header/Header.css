@@ -1,0 +1,413 @@
+/* src/components/Header/Header.css */
+
+/* --- 공통 레이아웃 초기화 --- */
+.header-inner,
+.fullscreen-header,
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 80px;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1023px) {
+  .header-inner,
+  .panel-header {
+    height: 70px;
+    padding: 0 24px;
+  }
+}
+
+/* --- HeaderContainer (상단 헤더 바) --- */
+.header-container {
+  position: fixed;
+  top: -100px;
+  left: 0;
+  width: 100%;
+  z-index: 1040;
+  transition: top 0.3s ease-in-out, background-color 0.3s ease;
+  background-color: transparent;
+}
+
+@media (max-width: 1023px) {
+  .header-container.is-visible {
+    top: 0 !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header-container.is-admin.is-visible { top: 58px; }
+  .header-container.is-visible:not(.is-admin) { top: 0; }
+}
+
+.header-container.is-scrolled {
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* --- Logo Styling --- */
+.logo-container img {
+  height: 45px;
+  display: block;
+  transition: all 0.3s ease;
+  filter: brightness(0) invert(1);
+}
+
+@media (max-width: 1023px) {
+  .logo-container img { height: 38px; filter: none !important; }
+}
+
+.header-container.is-scrolled .logo-container img,
+.menu-open-logo {
+  filter: none !important;
+}
+
+/* --- Navigation (Desktop 상단바 메뉴) --- */
+.desktop-nav-container {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .desktop-nav-container {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    height: 100%;
+  }
+  .desktop-nav-container .main-menu-list { display: flex; list-style: none; }
+  .desktop-nav-container .main-menu-item { position: relative; display: flex; align-items: center; }
+  
+  .desktop-nav-container a, .desktop-nav-container span {
+    padding: 0 clamp(10px, 1.8vw, 25px);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #FFFFFF;
+    transition: 0.3s;
+  }
+  .desktop-nav-container.is-scrolled a, 
+  .desktop-nav-container.is-scrolled span { color: #000000; }
+  
+  .desktop-nav-container a.active, 
+  .desktop-nav-container span.active { box-shadow: inset 0 -5px 0 0 currentColor; }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%; /* 80px 대신 100% 사용 (부모 높이에 딱 붙음) */    
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150vw;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+  }
+  .dropdown-menu.is-scrolled { background-color: #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+  
+  .dropdown-menu ul { 
+    display: flex; 
+    list-style: none; 
+    padding: 20px 0; 
+    gap: clamp(20px, 3vw, 40px); 
+  }
+
+  /* [수정 부분] 드롭다운 내부 메뉴 링크 스타일 및 활성화 가로줄 */
+  .dropdown-menu a { 
+    position: relative;        /* 가상요소 ::after의 기준점 */
+    color: #FFFFFF; 
+    text-decoration: none; 
+    font-weight: 500; 
+    padding-bottom: 8px;       /* 텍스트와 가로줄 사이의 간격 조정 */
+    display: inline-block;
+  }
+  .dropdown-menu.is-scrolled a { color: #000000; }
+
+  /* [수정 부분] 드롭다운 active 상태 가로줄 생성 */
+  .dropdown-menu a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;                 /* padding-bottom의 끝부분에 위치 */
+    left: 0;
+    width: 100%;               /* 텍스트 너비만큼 줄 생성 */
+    height: 3px;               /* 가로줄 두께 */
+    background-color: currentColor; /* 상위 텍스트 색상(검정/흰색) 자동 적용 */
+  }
+}
+
+/* --- Hamburger & Close Button --- */
+.hamburger-menu, .close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 2600;
+  padding: 10px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hamburger-menu .bar {
+  width: 24px;
+  height: 2px;
+  margin: 2px 0;
+  background-color: #FFFFFF;
+  transition: 0.3s;
+}
+
+.header-container.is-scrolled .hamburger-menu .bar { background-color: #000 !important; }
+
+.close-button span {
+  position: absolute;
+  width: 28px;
+  height: 1px;
+  background-color: #000;
+}
+.close-button span:nth-child(1) { transform: rotate(45deg); }
+.close-button span:nth-child(2) { transform: rotate(-45deg); }
+
+/* --- Side Panel & Fullscreen Wrapper --- */
+.side-panel-wrapper,
+.fullscreen-nav-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 2500;
+  opacity: 0;
+  visibility: hidden;
+  /* [수정] visibility 전환이 애니메이션과 자연스럽게 연결되도록 수정 */
+  transition: opacity 0.4s ease, visibility 0s ease 0.4s;
+}
+
+.side-panel-wrapper.is-open,
+.fullscreen-nav-wrapper.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s ease, visibility 0s ease 0s;
+}
+
+.menu-wrapper {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.panel-content {
+  position: relative;
+  height: calc(100% - 70px);
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* padding: 40px 0; */
+}
+
+/* --- [수정 반영] 모바일 메뉴 --- */
+.nav-list:not(.is-desktop) ul {
+  list-style: none;
+  padding: 0;
+}
+
+@media (max-width: 1023px) {
+  .side-panel-wrapper .nav-list .menu-wrapper > ul > li {
+    position: relative; 
+  }
+
+  .nav-list:not(.is-desktop) .menu-title-btn,
+  .nav-list:not(.is-desktop) > ul > li > a {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 5vh, 2rem); 
+    padding: 20px 5vw 20px 15vw; 
+    font-weight: 500;    color: #111;
+    text-align: left;
+    text-transform: uppercase;
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    text-decoration: none;
+  }
+
+  .nav-list:not(.is-desktop) .mobile-submenu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px 25px;
+    padding: 0 5vw 0 15vw;
+  }
+
+  .nav-list:not(.is-desktop) .mobile-submenu.show {
+    max-height: 200px;
+    opacity: 1;
+    padding-bottom: 20px; 
+  }
+  
+  .nav-list:not(.is-desktop) .mobile-submenu li a {
+    font-size: clamp(1rem, 2.5vh, 1.2rem); 
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+  }
+}
+
+/* --- [수정 반영] 데스크톱 전체 화면 메뉴 --- */
+.fullscreen-content { 
+  padding-top: 5vh; 
+  display: flex;
+  justify-content: flex-start; 
+  align-items: flex-start;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+.fullscreen-content .nav-list {
+  width: 100%;
+}
+
+.nav-list.is-desktop .menu-wrapper {
+  max-width: 100%; 
+  width: 100%;
+}
+
+.nav-list.is-desktop .menu-wrapper > ul {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-list.is-desktop .menu-wrapper > ul > li { 
+  position: relative; 
+  padding: 10px 5vw 30px 15vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nav-list.is-desktop .main-menu-group { 
+  display: flex; 
+  align-items: baseline; 
+}
+
+.nav-list.is-desktop .main-menu-item { 
+  width: 320px; 
+  font-size: clamp(2.2rem, 4vw, 3rem); 
+  font-weight: 500; 
+  font-family: 'Playfair Display', serif;
+  flex-shrink: 0; 
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: left;
+}
+
+.nav-list.is-desktop .main-menu-item a,
+.nav-list.is-desktop .main-menu-item span {
+  color: #000;
+  text-decoration: none;
+}
+
+.nav-list.is-desktop .submenu { 
+  display: flex; 
+  flex-direction: row; 
+  flex-wrap: wrap; 
+  gap: 15px 45px; 
+  list-style: none; 
+  flex: 1; 
+}
+
+.nav-list.is-desktop .submenu li a {
+  font-size: clamp(1.1rem, 2vw, 1.4rem); 
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-list.is-desktop .submenu li a:hover {
+  color: #2e7d32;
+}
+
+/* --- Side Panel Footer --- */
+.side-panel-footer {
+  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.side-panel-footer img { height: 50px; opacity: 0.6; }
+
+/* --- Overlay --- */
+.overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 2000;
+  animation: fadeInOverlay 0.4s ease forwards;
+}
+@keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+
+/* --- 순차적 애니메이션 지연 설정 --- */
+.main-menu-group {
+    opacity: 0;
+    transform: translateY(-20px); 
+    transition: opacity 0.9s cubic-bezier(0.23, 1, 0.32, 1), transform 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.side-panel-wrapper .menu-wrapper > ul > li::before,
+.fullscreen-nav-wrapper .menu-wrapper > ul > li::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: #00000052;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.side-panel-wrapper.is-open .main-menu-group,
+.fullscreen-nav-wrapper.is-open .main-menu-group {
+    opacity: 1;
+    transform: translateY(0);
+}
+.side-panel-wrapper.is-open .menu-wrapper > ul > li::before,
+.fullscreen-nav-wrapper.is-open .menu-wrapper > ul > li::before {
+    transform: scaleX(1);
+}
+
+/* 1번째 ~ 6번째 아이템 지연 시간 (동일 유지) */
+.side-panel-wrapper.is-open li:nth-child(1) .main-menu-group, .fullscreen-nav-wrapper.is-open li:nth-child(1) .main-menu-group { transition-delay: 0.3s; }
+.side-panel-wrapper.is-open li:nth-child(1)::before, .fullscreen-nav-wrapper.is-open li:nth-child(1)::before { transition-delay: 0.6s; }
+
+.side-panel-wrapper.is-open li:nth-child(2) .main-menu-group, .fullscreen-nav-wrapper.is-open li:nth-child(2) .main-menu-group { transition-delay: 0.53s; }
+.side-panel-wrapper.is-open li:nth-child(2)::before, .fullscreen-nav-wrapper.is-open li:nth-child(2)::before { transition-delay: 0.83s; }
+
+.side-panel-wrapper.is-open li:nth-child(3) .main-menu-group, .fullscreen-nav-wrapper.is-open li:nth-child(3) .main-menu-group { transition-delay: 0.75s; }
+.side-panel-wrapper.is-open li:nth-child(3)::before, .fullscreen-nav-wrapper.is-open li:nth-child(3)::before { transition-delay: 1.05s; }
+
+.side-panel-wrapper.is-open li:nth-child(4) .main-menu-group, .fullscreen-nav-wrapper.is-open li:nth-child(4) .main-menu-group { transition-delay: 0.98s; }
+.side-panel-wrapper.is-open li:nth-child(4)::before, .fullscreen-nav-wrapper.is-open li:nth-child(4)::before { transition-delay: 1.28s; }
+
+.side-panel-wrapper.is-open li:nth-child(5) .main-menu-group, .fullscreen-nav-wrapper.is-open li:nth-child(5) .main-menu-group { transition-delay: 1.2s; }
+.side-panel-wrapper.is-open li:nth-child(5)::before, .fullscreen-nav-wrapper.is-open li:nth-child(5)::before { transition-delay: 1.5s; }
+
+.side-panel-wrapper.is-open li:nth-child(6) .main-menu-group, .fullscreen-nav-wrapper.is-open li:nth-child(6) .main-menu-group { transition-delay: 1.43s; }
+.side-panel-wrapper.is-open li:nth-child(6)::before, .fullscreen-nav-wrapper.is-open li:nth-child(6)::before { transition-delay: 1.73s; }

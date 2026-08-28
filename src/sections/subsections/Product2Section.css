@@ -1,0 +1,11 @@
+.product2-section-wrapper {
+  padding: 20px;
+  text-align: center;
+}
+
+.product2-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}

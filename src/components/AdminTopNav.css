@@ -1,0 +1,102 @@
+/* --- 기본 데스크탑 스타일 (기존 코드 유지 및 정리) --- */
+.admin-top-nav {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.admin-top-nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.admin-top-nav p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.admin-top-nav .nav-buttons {
+  display: flex;
+  gap: 10px; /* 버튼 사이 간격 */
+}
+
+.admin-top-nav button {
+  background: white;
+  color: #3498db;
+  border: 1px solid #3498db;
+  border-radius: 4px;
+  padding: 5px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+.admin-top-nav button:hover {
+  background-color: #f1f1f1;
+}
+
+.admin-top-nav .dashboard-button {
+  background: #fff;
+  color: #3498db;
+  border: 1px solid #fff;
+}
+
+.admin-top-nav .dashboard-button:hover {
+  background-color: #eee;
+  color: #2980b9;
+  border-color: #eee;
+}
+
+/* --- 모바일 및 태블릿 최적화 (1023px 이하) --- */
+@media (max-width: 1023px) {
+  .admin-top-nav {
+    padding: 8px 0; /* 상하 여백 약간 축소 */
+  }
+
+  .admin-top-nav .container {
+    padding: 0 15px; /* 좌우 여백 축소 */
+    /* 필요 시 버튼이 많아지면 아래 주석을 해제하여 세로 배치로 변경 가능 */
+    /* flex-direction: column; 
+    gap: 8px; */
+  }
+
+  .admin-top-nav p {
+    font-size: 14px; /* 글자 크기 조정 */
+  }
+
+  .admin-top-nav button {
+    padding: 6px 10px; /* 터치하기 편하도록 세로 길이는 유지하되 가로 폭 조정 */
+    font-size: 13px;   /* 버튼 글자 크기 축소 */
+  }
+  
+  /* 모바일에서 버튼 간격 조정 */
+  .admin-top-nav .nav-buttons {
+    gap: 5px;
+  }
+}
+
+/* --- 초소형 모바일 최적화 (480px 이하) --- */
+@media (max-width: 480px) {
+  .admin-top-nav .container {
+    flex-direction: row; /* 가로 유지 혹은 세로 선택 */
+    justify-content: space-between;
+  }
+
+  .admin-top-nav p {
+    max-width: 150px; /* 문구가 길어질 경우 대비 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

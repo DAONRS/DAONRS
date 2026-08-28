@@ -1,0 +1,573 @@
+/* =================================================================
+  Support Page Common Styles (Layout & Icons Preserved)
+  - 원본의 아이콘 크기, 레이아웃 수치를 그대로 유지하며 폰트만 반응형으로 수정합니다.
+================================================================= */
+
+:root {
+  /* 최소 폰트 사이즈를 보호하는 가변 변수 */
+  --fz-h1: clamp(24px, 4vw, 28px);
+  --fz-h2: clamp(22px, 3.5vw, 24px);
+  --fz-title: clamp(15px, 2.5vw, 16px);
+  --fz-body: clamp(14px, 2vw, 15px);
+  --fz-meta: clamp(13px, 1.8vw, 14px);
+}
+
+/* Layout & Typography */
+.support-content-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px; 
+  font-family: 'Pretendard', -apple-system, sans-serif;
+}
+
+/* Accordion/List Item Base */
+.list-item-wrapper {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.list-item-header {
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start;
+  gap: 12px;
+  padding: 22px 15px; 
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #070707;
+}
+
+.list-item-title-group {
+  display: flex;
+  align-items: center;
+  gap: 20px; 
+  flex: 1;
+}
+
+.q-icon-circle {
+  background-color: #111;
+  color: #fff;
+  border-radius: 50%;
+  min-width: 28px; 
+  height: 28px;    
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px; 
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.item-title {
+  font-size: var(--fz-title);
+  font-weight: 500;
+  color: #333;
+}
+
+.item-title.expanded {
+  font-weight: 700;
+}
+
+.item-meta {
+  width: 100%;
+  justify-content: flex-end;
+  font-size: var(--fz-meta);
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.item-content {
+  padding: 30px 40px 40px 63px; 
+  background-color: #f9f9f9;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  color: #444;
+  font-size: var(--fz-body);
+  border-top: 1px solid #f0f0f0;
+}
+
+/* -----------------------------------------------------------------
+  Cafe Style Editor UI
+----------------------------------------------------------------- */
+.cafe-editor-container {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 25px; 
+  margin-top: 20px;
+}
+
+.editor-title-input {
+  width: 100%;
+  font-size: 22px; 
+  padding: 15px 0;
+  border: none;
+  border-bottom: 2px solid #f0f0f0;
+  margin-bottom: 15px;
+  font-weight: 700;
+  outline: none;
+}
+
+.editor-content-textarea {
+  width: 100%;
+  min-height: 400px; 
+  border: none;
+  resize: vertical;
+  font-size: var(--fz-body);
+  line-height: 1.8;
+  outline: none;
+  padding: 15px 0;
+}
+
+/* -----------------------------------------------------------------
+  Inquiry Section Styles (반응형 여백 및 정렬 수정 버전)
+----------------------------------------------------------------- */
+.inquiry-form-wrapper {
+  max-width: 900px;
+  margin: 40px auto 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 40px; /* 좌우 입력 필드 간 여백 확보 */
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 20px 0;
+}
+
+.form-group label {
+  width: 100px; /* 모든 라벨 너비 통일하여 수직 정렬 맞춤 */
+  font-size: var(--fz-body);
+  font-weight: 600;
+  color: #333;
+  flex-shrink: 0;
+}
+
+.form-group input,
+.form-group textarea {
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: var(--fz-body);
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #111;
+}
+
+/* 제목 및 내용 배열 조정: 상단 필드와 라벨 정렬을 동일하게 유지 */
+.form-group.full-width {
+  flex-direction: row; 
+  align-items: center;
+  padding: 20px 0;
+}
+
+.form-group.full-width textarea {
+  min-height: 200px; 
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* 내용(textarea)의 경우 라벨이 상단에 오도록 별도 처리 */
+.form-row:last-of-type .form-group.full-width {
+  align-items: flex-start;
+}
+.form-row:last-of-type .form-group.full-width label {
+  padding-top: 12px;
+}
+
+/* -----------------------------------------------------------------
+  Pagination Common Styles (추가됨)
+----------------------------------------------------------------- */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 50px 0;
+  width: 100%;
+}
+
+.page-btn {
+  padding: 10px 18px;
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #ff5e1a;
+  color: #ff5e1a;
+  background-color: #fffaf8;
+}
+
+.page-btn:disabled {
+  background-color: #f8f8f8;
+  color: #ccc;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 15px;
+  font-weight: 500;
+  color: #666;
+  padding: 0 10px;
+  letter-spacing: 1px;
+}
+
+.page-info strong {
+  color: #ff5e1a;
+  font-weight: 800;
+}
+
+/* -----------------------------------------------------------------
+  관리용 버튼 액션 스타일 (강화됨)
+----------------------------------------------------------------- */
+.notice-item-actions {
+  display: flex;
+  gap: 8px;
+  margin-right: 5px;
+}
+
+.notice-action-edit, 
+.notice-action-delete {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-block;
+}
+
+/* 수정 버튼: 부드러운 그레이 */
+.notice-action-edit {
+  background-color: #f4f4f4;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.notice-action-edit:hover {
+  background-color: #e9e9e9;
+  color: #222;
+  border-color: #ccc;
+}
+
+/* 삭제 버튼: 경고의 레드 */
+.notice-action-delete {
+  background-color: #fff0f0;
+  color: #d93025;
+  border: 1px solid #fadad7;
+}
+
+.notice-action-delete:hover {
+  background-color: #fce8e6;
+  color: #a50e0e;
+  border-color: #f1b7b1;
+}
+
+/* -----------------------------------------------------------------
+  Responsive Styles
+----------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .support-content-section { padding: 40px 20px; }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0; 
+    width: 100%;
+  }
+
+  .form-group {
+    padding: 15px 0 !important;
+  }
+
+  .form-group label {
+    width: 80px; 
+    min-width: 80px;
+  }
+
+  .form-group.full-width {
+    flex-direction: row; 
+    align-items: center;
+  }
+
+  .form-group.full-width textarea {
+    width: 100% !important;
+  }
+
+  .pagination-container {
+    gap: 10px;
+    margin: 30px 0;
+  }
+  
+  .page-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+    min-width: 60px;
+  }
+}
+
+/* 기타 스타일 보존 */
+.notice-write-button { padding: 8px 18px; background: #111; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
+.dataroom-accordion-icon { transform: rotate(0deg); transition: transform 0.3s; color: #999; }
+.dataroom-accordion-icon.expanded { transform: rotate(180deg); }
+
+/* -----------------------------------------------------------------
+  File Attachment Styles (에디터 내 파일 첨부 영역)
+----------------------------------------------------------------- */
+.file-attach-area {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: #fafafa;
+  border: 1px dashed #ddd;
+  border-radius: 8px;
+}
+
+.file-attach-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-attach-label:hover {
+  border-color: #111;
+  color: #111;
+  background: #f5f5f5;
+}
+
+.file-attach-icon { font-size: 16px; }
+
+.file-attach-input {
+  display: none;
+}
+
+.file-attach-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #333;
+  max-width: 100%;
+}
+
+.file-attach-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
+.file-remove-btn {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.file-remove-btn:hover {
+  color: #d93025;
+}
+
+/* -----------------------------------------------------------------
+  File Download Styles (게시글 상세 보기 내 다운로드 영역)
+----------------------------------------------------------------- */
+.file-download-area {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.file-download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.file-download-link:hover {
+  background: #f0f0f0;
+  border-color: #ccc;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.file-download-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.file-download-name {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
+.file-download-btn {
+  padding: 4px 12px;
+  background: #111;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.file-download-link:hover .file-download-btn {
+  background: #ff5e1a;
+}
+
+@media (max-width: 768px) {
+  .file-attach-area { padding: 12px 14px; gap: 10px; }
+  .file-attach-name { max-width: 180px; }
+  .file-download-name { max-width: 150px; }
+  .file-download-link { padding: 10px 14px; gap: 8px; font-size: 13px; }
+}
+
+/* -----------------------------------------------------------------
+  Thank You (Submission Success) Styles
+----------------------------------------------------------------- */
+.thank-you-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 50px 40px;
+  background: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.thank-you-container .q-icon-circle {
+  background-color: #ff5e1a; /* 포인트 컬러인 오렌지 적용 */
+  color: #fff;
+  border-radius: 50%;
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 14px rgba(255, 94, 26, 0.3);
+}
+
+.thank-you-container h3 {
+  font-family: 'Motiva Sans Bold', 'Pretendard', sans-serif;
+  font-size: clamp(20px, 3vw, 24px);
+  color: #111;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.thank-you-container p {
+  font-size: clamp(14px, 2vw, 16px);
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  word-break: keep-all;
+}
+
+.thank-you-container .form-footer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.thank-you-container .btn-primary {
+  width: 100%;
+  max-width: 240px;
+  height: 50px;
+  background-color: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thank-you-container .btn-primary:hover {
+  background-color: #ff5e1a;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 94, 26, 0.2);
+}
+
+@media (max-width: 768px) {
+  .thank-you-container {
+    margin: 40px auto;
+    padding: 40px 20px;
+    border-radius: 12px;
+  }
+  
+  .thank-you-container .q-icon-circle {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+}

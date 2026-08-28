@@ -1,0 +1,74 @@
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import AboutPage from './pages/AboutPage';
+import BusinessPage from './pages/BusinessPage';
+import ProductsPage from './pages/ProductsPage';
+import CasesPage from './pages/CasesPage';
+import SupportPage from './pages/SupportPage';
+import './App.css';
+import AdminTopNav from './components/AdminTopNav';
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
+import { useAuth } from './contexts/AuthContext';
+import MonitorPage from './pages/MonitorPage';
+
+function App() {
+  const { session, loading, isAdmin } = useAuth();
+  const location = useLocation();
+
+  const isAdminPage = location.pathname.startsWith('/admin');
+  const isMonitorPage = location.pathname.startsWith('/monitor');
+
+  useEffect(() => {
+    // [규칙 1] 경로 변경 시 기본 동작은 최상단 이동 (메인 메뉴 클릭 대응)
+    window.scrollTo(0, 0);
+
+    // [규칙 2] 서브 메뉴/SubNav 클릭 시 발생하는 커스텀 이벤트 처리
+    const handleScrollToContent = () => {
+      setTimeout(() => {
+        window.scrollTo({
+          top: window.innerHeight, // 100vh 지점
+          behavior: 'smooth'
+        });
+      }, 100); // 렌더링 후 실행을 위한 미세 지연
+    };
+
+    window.addEventListener('scrollToSubContent', handleScrollToContent);
+    return () => window.removeEventListener('scrollToSubContent', handleScrollToContent);
+  }, [location.pathname]);
+
+  if (loading) return <div>Loading...</div>;
+
+  if (isAdminPage) {
+    return (
+      <Routes>
+        <Route path="/admin" element={session ? <AdminDashboardPage /> : <AdminLoginPage />} />
+      </Routes>
+    );
+  }
+
+  return (
+    <div className={`App ${isAdmin ? 'admin-logged-in' : ''}`}>
+      {isAdmin && <AdminTopNav />}
+      {!isMonitorPage && <Header isAdmin={isAdmin} />}
+
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Navigate to="/about/vision" replace />} />
+          <Route path="/about/*" element={<AboutPage />} />
+          <Route path="/business/*" element={<BusinessPage />} />
+          <Route path="/products/*" element={<ProductsPage />} />
+          <Route path="/cases/*" element={<CasesPage />} />
+          <Route path="/support/*" element={<SupportPage />} />
+          <Route path="/monitor/*" element={<MonitorPage />} />
+        </Routes>
+      </main>
+
+      {!isMonitorPage && <Footer />}
+    </div>
+  );
+}
+
+export default App;

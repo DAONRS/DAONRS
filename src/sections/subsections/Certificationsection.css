@@ -1,0 +1,204 @@
+/* src/sections/subsections/IntellectualPropertySection.css */
+
+
+/* 1. 기본 컨테이너 및 헤더 */
+.ip-container {
+  padding: clamp(60px, 8vw, 120px) 0;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.section-header {
+  margin-bottom: clamp(40px, 6vw, 80px);
+  text-align: center;
+}
+
+.section-header .main-title {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #666;
+}
+
+/* 2. 관리자 툴바 (수정/업로드 버튼) */
+.admin-toolbar {
+  margin-top: 25px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.mode-toggle {
+  padding: 10px 24px;
+  border-radius: 30px;
+  border: 1px solid #ff5e1a;
+  background: #fff;
+  color: #ff5e1a;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-toggle.active {
+  background: #ff5e1a;
+  color: #fff;
+}
+
+.upload-btn {
+  cursor: pointer;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.upload-btn:hover {
+  background-color: #000;
+}
+
+/* 3. 편집 모드: 카드 그리드 레이아웃 */
+.admin-card-grid {
+  display: grid;
+  /* 카드 크기를 작게 조정하여 한눈에 확인 가능 */
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-image-wrapper {
+  position: relative;
+  aspect-ratio: 3 / 4; /* 인증서 비율 유지 */
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.card-image-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* 순서 변경 및 삭제 컨트롤 (호버 시 노출) */
+.card-controls {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.admin-card:hover .card-controls {
+  opacity: 1;
+}
+
+.control-btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.card-controls button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.card-controls .del-btn {
+  background: #ff4d4f;
+  color: #fff;
+  width: 80%;
+}
+
+.card-info {
+  padding: 10px;
+  background: #fff;
+  font-size: 13px;
+  color: #333;
+  border-top: 1px solid #f0f0f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 4. 일반 모드: 정렬된 이미지 그리드 스타일 */
+.content-highlight p {
+  margin-bottom: 0.5rem; /* 본문 아래 여백 축소 */
+}
+
+.cert-gallery-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 20px 20px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  flex-wrap: nowrap; /* 3/2 정렬 깨짐 방지 */
+}
+
+.gallery-item {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 190px; /* 최대 가로 크기 확대 */
+  aspect-ratio: 3 / 4; /* 가로에 맞춰 세로가 비율대로 조절되어 내부 상하 여백 최소화 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #eee;
+  background: #fafafa;
+  padding: 8px;
+  flex-shrink: 1; /* 화면이 좁아질 때 유연하게 축소 허용 */
+}
+
+.gallery-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* 5. 공통 */
+.no-ip-data {
+  padding: 100px 0;
+  color: #999;
+}

@@ -1,0 +1,68 @@
+/* App.css */
+
+.floating-brochure-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  
+  /* 버튼 크기 확대 (72px) 및 디자인 */
+  width: 72px;
+  height: 72px;
+  background-color: #d95325; /* 로고 색상 */
+  color: #ffffff; /* 흰색 아이콘/텍스트 */
+  border: 1px solid #bf451e; 
+  border-radius: 20px; /* 더 부드러운 라운드 */
+  box-shadow: 0 6px 20px rgba(217, 83, 37, 0.5); 
+  
+  /* 내부 요소 배치 (Flexbox) */
+  display: flex;
+  flex-direction: column; /* 아이콘과 텍스트 세로 정렬 */
+  align-items: center;
+  justify-content: center; /* 중앙 정렬 */
+  text-decoration: none;
+  
+  /* 호버 효과 */
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 호버 시 버튼 액션 */
+.floating-brochure-btn:hover {
+  transform: translateY(-4px) scale(1.03); /* 살짝 상승 */
+  background-color: #c0471f; 
+  box-shadow: 0 8px 25px rgba(217, 83, 37, 0.7); 
+}
+
+/* --- 내부 SVG 아이콘 스타일 --- */
+.floating-brochure-btn .book-icon {
+  width: 28px; /* 아이콘 크기 조정 */
+  height: 28px;
+  margin-bottom: 3px; /* 텍스트와 간격 */
+  opacity: 0.9; /* 살짝 투명도 적용 */
+  transition: opacity 0.2s ease;
+}
+
+.floating-brochure-btn:hover .book-icon {
+  opacity: 1; /* 호버 시 선명하게 */
+}
+
+/* --- 내부 텍스트 스타일 --- */
+.floating-brochure-btn .btn-text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1; /* 줄 간격 좁힘 */
+}
+
+.floating-brochure-btn .btn-text-line1,
+.floating-brochure-btn .btn-text-line2 {
+  font-size: 10px; /* 폰트 크기 설정 */
+  font-weight: 700; /* 굵은 글씨 */
+  font-family: 'Pretendard', sans-serif; /* (선택사항) 폰트 지정 */
+  letter-spacing: -0.5px; /* 자간 조정으로 꽉 차 보이게 */
+  color: #ffffff;
+  text-align: center;
+  
+  /* 텍스트 그림자 효과를 주어 가독성 확보 */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}

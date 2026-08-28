@@ -1,0 +1,66 @@
+/* 모달 전체 배경 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6); /* 배경 투명도 약간 완화 */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 수직, 수평 가운데 정렬 */
+  z-index: 1000;
+  padding: 20px; /* 화면 가장자리 여백 보장 */
+}
+
+/* 모달 본체 */
+.modal-content {
+  background: #fff;
+  padding: 40px 30px; /* 상단 닫기 버튼을 고려해 여백 조정 */
+  border-radius: 12px; /* 조금 더 부드러운 라운드 처리 */
+  width: 100%;
+  max-width: 650px; /* 지식재산권 공고용으로 적절한 가독성 너비 */
+  max-height: 85vh; /* 화면 높이의 85% 제한 */
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: modal-appear 0.3s ease-out; /* 등장 애니메이션 */
+}
+
+/* 모바일 반응형 조정 */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 30px 20px;
+    border-radius: 8px;
+    max-height: 90vh;
+  }
+  
+  .modal-close-button {
+    top: 10px !important;
+    right: 10px !important;
+  }
+}
+
+/* 닫기 버튼 */
+.modal-close-button {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.modal-close-button:hover {
+  color: #000;
+}
+
+/* 등장 애니메이션 */
+@keyframes modal-appear {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

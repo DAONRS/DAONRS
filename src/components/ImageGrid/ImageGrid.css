@@ -1,0 +1,41 @@
+/* src/components/ImageGrid/ImageGrid.css */
+
+/* 필드 이미지 그리드 */
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 데스크톱: 4개 이미지 한 줄로 표시 */
+  gap: 10px; /* 이미지 사이 간격 추가 */
+  padding: 0 10px; /* 그리드 좌우에 약간의 여백 추가 */
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.grid-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.grid-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+
+/* 모바일 반응형 대응 */
+@media (max-width: 768px) {
+  /* 모바일: 2x2 그리드로 변경 */
+  .field-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 1024px 데스크탑 반응형 대응 */
+@media (max-width: 1024px) {
+  .field-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+}

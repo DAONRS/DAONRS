@@ -1,0 +1,41 @@
+.rnd-section-wrapper {
+  /* Add any section-specific styles here if needed */
+}
+
+.rnd-subsection-title-container {
+  text-align: center;
+  margin: 50px 0;
+}
+
+.rnd-subsection-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #ff5e1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.rnd-subsection-title .quote {
+  color: #555;
+  font-family: serif;
+}
+
+.rnd-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .rnd-subsection-title-container {
+    margin: 30px 0;
+  }
+  .rnd-subsection-title {
+    font-size: 30px;
+    gap: 5px;
+  }
+}

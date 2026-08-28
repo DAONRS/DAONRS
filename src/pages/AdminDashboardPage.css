@@ -1,0 +1,156 @@
+:root {
+  --primary-color: #4f46e5;
+  --secondary-color: #10b981;
+  --danger-color: #ef4444;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+}
+
+.admin-dashboard-container {
+  padding: 40px 20px;
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  text-align: left !important;
+}
+
+.admin-dashboard-container input,
+.admin-dashboard-container button,
+.admin-dashboard-container .ql-editor {
+  font-family: inherit !important;
+}
+
+.admin-dashboard-header {
+  max-width: 1000px;
+  margin: 0 auto 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 20px;
+}
+
+.admin-dashboard-header h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.header-buttons button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  background: white;
+  margin-left: 8px;
+}
+
+.logout-button { color: var(--danger-color); }
+.logout-button:hover { background: var(--danger-color); color: white; }
+
+.admin-dashboard-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.admin-tabs button {
+  padding: 12px 24px;
+  border-radius: 10px;
+  background: #e2e8f0;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-tabs button.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.section-card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: block;
+  color: var(--text-muted);
+}
+
+/* 에디터 높이 설정 */
+.editor-wrapper {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+}
+
+.ql-toolbar {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.ql-container {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  font-size: 16px;
+}
+
+/* 테이블 스타일 */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.history-table th {
+  text-align: left;
+  padding: 15px;
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.history-table td {
+  padding: 15px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.btn-edit { background: #e0e7ff; color: #4338ca; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; margin-right: 5px; }
+.btn-delete { background: #fee2e2; color: #b91c1c; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; }
+
+/* 문의 카드 */
+.inquiry-card {
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

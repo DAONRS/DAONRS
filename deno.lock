@@ -12,7 +12,6 @@
     "packageJson": {
       "dependencies": [
         "npm:@eslint/js@^9.39.1",
-        "npm:@studio-freight/lenis@^1.0.42",
         "npm:@supabase/supabase-js@^2.89.0",
         "npm:@tailwindcss/vite@^4.1.18",
         "npm:@vitejs/plugin-react@^5.1.1",
@@ -20,6 +19,7 @@
         "npm:axios@^1.13.2",
         "npm:browser-image-compression@^2.0.2",
         "npm:clsx@^2.1.1",
+        "npm:dompurify@^3.4.15",
         "npm:eslint-plugin-react-hooks@^7.0.1",
         "npm:eslint-plugin-react-refresh@~0.4.24",
         "npm:eslint@^9.39.1",
@@ -29,6 +29,7 @@
         "npm:react-daum-postcode@^3.2.0",
         "npm:react-dom@^19.2.0",
         "npm:react-icons@^5.5.0",
+        "npm:react-pageflip@^2.0.3",
         "npm:react-quill-new@^3.7.0",
         "npm:react-router-dom@^7.12.0",
         "npm:react@^19.2.0",

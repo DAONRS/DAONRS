@@ -1,8 +1,12 @@
 import React, { useState, forwardRef } from 'react';
 import { supabase } from '../../supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { useRevealGroup } from '../../hooks/useScrollReveal';
 
 const InquirySection = forwardRef((props, ref) => {
+  // 스크롤 진입 시 섹션 단위 등장 애니메이션 (index.css 의 .reveal)
+  const reveal = useRevealGroup();
+
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -60,7 +64,7 @@ const InquirySection = forwardRef((props, ref) => {
   const renderContent = () => {
     if (isSubmitted) {
       return (
-        <div className="thank-you-container">
+        <div {...reveal('thanks', 'thank-you-container')}>
           <div className="q-icon-circle">✓</div>
           <h3>문의가 정상적으로 접수되었습니다.</h3>
           <p>빠른 시일 내에 답변드리겠습니다.</p>
@@ -78,11 +82,11 @@ const InquirySection = forwardRef((props, ref) => {
 
     return (
       <>
-        <header className="subsection-header">
+        <header {...reveal('head', 'subsection-header')}>
           <h2 className="subsection-title">문의하기</h2>
         </header>
         <hr className="section-top-line" />
-        <form onSubmit={handleSubmit} className="inquiry-form-wrapper">
+        <form onSubmit={handleSubmit} {...reveal('form', 'inquiry-form-wrapper')}>
           <div style={{ opacity: 0, position: 'absolute', zIndex: -1, pointerEvents: 'none' }}>
             <input id="confirm_email" type="email" value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} tabIndex="-1" />
           </div>

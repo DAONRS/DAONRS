@@ -4,7 +4,7 @@
   background-color: #000000; /* 이미지와 유사한 어두운 배경 */
   padding: 50px 20px;
   color: #888;
-  font-size: 0.85rem;
+  font-size: var(--fz-xs);
   border-top: 1px solid #222;
 }
 
@@ -25,8 +25,8 @@
 }
 
 .logo-placeholder {
-  font-weight: bold;
-  font-size: 1.2rem;
+  font-weight: var(--fw-bold);
+  font-size: var(--fz-h6);
   color: #555; /* 이미지의 로고처럼 차분한 색상 */
   /* border: 2px solid #333; */
   padding: 10px;
@@ -50,7 +50,7 @@
 .info-item .label {
   width: 90px; /* 라벨 정렬 고정 */
   color: #bbb;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   flex-shrink: 0;
 }
 
@@ -63,7 +63,7 @@
 .footer-copyright {
   text-align: right;
   align-self: flex-end; /* 하단 정렬 */
-  font-size: 0.75rem;
+  font-size: var(--fz-2xs);
   color: #555;
   white-space: nowrap;
 }

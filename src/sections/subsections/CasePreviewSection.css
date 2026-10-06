@@ -14,17 +14,22 @@
 }
 
 .portfolio-sub {
-    font-size: 0.85rem;
+    font-size: var(--fz-xs);
     letter-spacing: 2px;
     color: #888;
-    font-weight: 700;
+    font-weight: var(--fw-bold);
     margin-bottom: 8px;
 }
 
 .portfolio-main {
-    font-size: 2.2rem;
-    font-weight: 800;
+    /* [수정] 35px 급 대형 헤드라인인데 본문 서체(Pretendard)로 렌더되어
+       더 작은 .case-item-title(25.6px, IBM Plex)보다 제목 위계가 뒤집혀 있었다.
+       제목 전용 서체로 맞추고, IBM Plex Sans KR 미로드 굵기(800) → 700 으로 정규화. */
+    font-family: var(--font-display);
+    font-size: var(--fz-h2);
+    font-weight: var(--fw-bold);
     color: #111;
+    letter-spacing: -0.03em;
     margin: 0;
 }
 
@@ -86,8 +91,9 @@
 }
 
 .case-item-title {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: var(--fz-h3);
+    font-weight: var(--fw-bold);
     color: #111;
 }
 
@@ -106,8 +112,8 @@
     padding: 12px 28px;
     border-radius: 50px;
     color: #fff;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: var(--fz-ui);
+    font-weight: var(--fw-semibold);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -172,21 +178,21 @@
 .label-group.align-right { text-align: right; }
 
 .label-top { 
-    font-size: clamp(0.65rem, 0.8vw, 0.75rem); 
+    font-size: var(--fz-2xs); 
     color: #999; 
-    font-weight: 700; 
+    font-weight: var(--fw-bold); 
 }
 .label-bottom { 
-    font-size: clamp(0.8rem, 1vw, 0.9rem); 
+    font-size: var(--fz-meta); 
     color: #111; 
-    font-weight: 600; 
+    font-weight: var(--fw-semibold); 
     margin-top: 2px; 
     white-space: nowrap;
 }
 
 .arrow {
     font-size: 1.2rem;
-    font-weight: bold;
+    font-weight: var(--fw-bold);
 }
 
 /* 모바일 및 저해상도 태블릿 대응 */

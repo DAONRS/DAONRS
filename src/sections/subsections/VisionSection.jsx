@@ -1,9 +1,10 @@
 import React, { forwardRef } from 'react';
-import visionImage from '../../assets/images/vision.jpg';
+import visionImage from '../../assets/images/vision.webp';
 import './VisionSection.css';
 
 // react-icons 임포트
 import { FaMicrochip, FaWind, FaTools, FaGlobeAmericas } from 'react-icons/fa';
+import { useRevealGroup } from '../../hooks/useScrollReveal';
 
 // 개별 비전 아이템 컴포넌트
 const VisionCard = ({ title, subTitle, description, alignClass }) => (
@@ -23,6 +24,9 @@ const VisionCard = ({ title, subTitle, description, alignClass }) => (
 );
 
 const VisionSection = forwardRef((props, ref) => {
+  // 스크롤 진입 시 섹션 단위 등장 애니메이션 (index.css 의 .reveal)
+  const reveal = useRevealGroup();
+
   const visionData = [
     {
       title: "환경친화경영",
@@ -48,16 +52,16 @@ const VisionSection = forwardRef((props, ref) => {
     <section id="vision" ref={ref} className="section">
       <div className="sub-section">
         {/* 헤더 영역 */}
-        <header className="subsection-header">
+        <header {...reveal('head', 'subsection-header')}>
           <h1 className="subsection-title">기업개요</h1>
         </header>
         <hr className="section-top-line" />
  
-        <h2 className="subsection-subtitle">
+        <h2 {...reveal('sub1', 'subsection-subtitle')}>
           "데이터로 설계하는 스마트팜의 새로운 표준"
         </h2>
 
-        <div className="content-highlight">
+        <div {...reveal('hl1', 'content-highlight')}>
           <p>
             DAONRS는 고도화된 측정 제어기와 탄산가스 솔루션으로 
             최적의 생육 환경을 만드는 하드웨어 전문가입니다. <br />
@@ -66,7 +70,7 @@ const VisionSection = forwardRef((props, ref) => {
         </div>
 
         {/* 핵심 역량 그리드 영역 (아이콘 적용) */}
-        <div className="capability-container">
+        <div {...reveal('capability', 'capability-container')}>
           <div className="capability-grid">
         
             {/* 01. 스마트 측정 제어 */}
@@ -119,12 +123,12 @@ const VisionSection = forwardRef((props, ref) => {
                 
         <hr className="section-sub-line" />
 
-        <h2 className="subsection-subtitle">
+        <h2 {...reveal('sub2', 'subsection-subtitle')}>
           지속 가능한 농업을 위한 혁신<br />
           Innovation for Sustainable Agriculture
         </h2>
 
-        <div className="content-highlight">
+        <div {...reveal('hl2', 'content-highlight')}>
           <p style={{textAlign:'center'}}>
             "혁신적인 기술로 인류와 자연을 잇는 지속 가능한 농업." <br />
             DAONRS는 스마트 농업의 가치를 재정의하고 고객과 환경이 상생하는 풍요로운 내일을 열어갑니다.  
@@ -132,7 +136,7 @@ const VisionSection = forwardRef((props, ref) => {
         </div>
 
         {/* 비전 콘텐츠 영역 (서클 & 카드) */}
-        <div className="vision-interactive-container">
+        <div {...reveal('vision', 'vision-interactive-container')}>
           <div className="vision-side-area side-left">
             <VisionCard {...visionData[0]} alignClass="align-right" />
           </div>

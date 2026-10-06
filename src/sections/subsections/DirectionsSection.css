@@ -9,13 +9,13 @@
 .info-item { display: flex; align-items: center; gap: 15px; }
 .info-text { display: flex; align-items: baseline; gap: 15px; }
 .info-text h3, .address-header h3 {
-  font-size: 18px;
-  font-weight: 800;
+  font-size: var(--fz-body);
+  font-weight: var(--fw-extrabold);
   margin: 0;
   color: #000;
 }
 .info-text h3 { min-width: 80px; }
-.info-text p, .address-text { font-size: 16px; color: #444; margin: 0; }
+.info-text p, .address-text { font-size: var(--fz-ui); color: #444; margin: 0; }
 
 .icon-circle {
   width: 44px; height: 44px; background-color: #2e7d32; color: white;
@@ -59,8 +59,8 @@
   border: none;
   border-radius: 3px;
   padding: 4px 8px;
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: var(--fz-2xs);
+  font-weight: var(--fw-medium);
   cursor: pointer;
   display: flex;
   align-items: center;

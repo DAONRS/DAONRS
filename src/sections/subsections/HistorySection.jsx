@@ -2,8 +2,13 @@ import React, { forwardRef, useState, useEffect, useRef } from 'react';
 import { supabase } from '../../supabaseClient';
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import './HistorySection.css';
+import { useRevealGroup } from '../../hooks/useScrollReveal';
+import { sanitizeHtml } from '../../utils/sanitizeHtml';
 
 const HistorySection = forwardRef((props, ref) => {
+  // 스크롤 진입 시 섹션 단위 등장 애니메이션 (index.css 의 .reveal)
+  const reveal = useRevealGroup();
+
   const [historyData, setHistoryData] = useState(() => {
     const saved = localStorage.getItem('daonrs_history');
     return saved ? JSON.parse(saved) : [];
@@ -99,18 +104,18 @@ const HistorySection = forwardRef((props, ref) => {
   return (
     <section id="history" ref={ref} className="section">
       <div className="sub-section">
-        <header className="subsection-header">
+        <header {...reveal('head', 'subsection-header')}>
           <h1 className="subsection-title">회사 연혁</h1>
         </header>
         <hr className="section-top-line" />
 
-        <h2 className="subsection-subtitle">"DAONRS의 시간은 고객의 성장과 함께합니다."</h2>
-        <div className="content-highlight">
+        <h2 {...reveal('sub', 'subsection-subtitle')}>"DAONRS의 시간은 고객의 성장과 함께합니다."</h2>
+        <div {...reveal('hl', 'content-highlight')}>
           <p>작은 시작부터 지금의 성취까지, <br />
             DAONRS가 걸어온 순간들을 기록합니다.</p>
         </div>  
         
-        <div className="navigation">
+        <div {...reveal('nav', 'navigation')}>
           <span className="page-num">
             {String(currentIndex + 1).padStart(2, '0')} / {String(totalItems).padStart(2, '0')}
           </span>
@@ -136,7 +141,7 @@ const HistorySection = forwardRef((props, ref) => {
                       <span className="month">{event.month}</span>
                       <div 
                         className="content multi-column" 
-                        dangerouslySetInnerHTML={{ __html: event.content }} 
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.content) }} 
                       />
                     </li>
                   ))}

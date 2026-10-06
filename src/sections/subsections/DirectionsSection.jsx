@@ -2,22 +2,26 @@ import React, { forwardRef } from 'react';
 import content from '../../content/DirectionsContent.json';
 import './DirectionsSection.css';
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaExternalLinkAlt } from 'react-icons/fa';
+import { useRevealGroup } from '../../hooks/useScrollReveal';
 
 const DirectionsSection = forwardRef((props, ref) => {
+  // 스크롤 진입 시 섹션 단위 등장 애니메이션 (index.css 의 .reveal)
+  const reveal = useRevealGroup();
+
   return (
     <section id="directions" className="section" ref={ref}>
       <div className="sub-section">
-        <header className="subsection-header">
+        <header {...reveal('head', 'subsection-header')}>
           <h2 className="subsection-title">오시는 길</h2>
         </header>
         <hr className="section-top-line" />
-        <h2 className="subsection-subtitle">DAONRS는 여러분의 방문을 환영합니다.</h2>
+        <h2 {...reveal('sub', 'subsection-subtitle')}>DAONRS는 여러분의 방문을 환영합니다.</h2>
         
-        <div className="content-highlight">
+        <div {...reveal('hl', 'content-highlight')}>
           <p>방문을 원하신다면 아래 위치 정보를 참고해주세요.</p>
         </div>
         
-        <div className="map-container">
+        <div {...reveal('map', 'map-container')}>
           <div className="map-wrapper">
             <iframe 
               title="지도"
@@ -29,7 +33,7 @@ const DirectionsSection = forwardRef((props, ref) => {
           </div>
         </div>
 
-        <div className="info-layout">
+        <div {...reveal('info', 'info-layout')}>
           <div className="contact-row">
             <div className="info-item">
               <div className="icon-circle"><FaPhoneAlt /></div>
@@ -42,7 +46,7 @@ const DirectionsSection = forwardRef((props, ref) => {
               <div className="icon-circle"><FaEnvelope /></div>
               <div className="info-text">
                 <h3>E-mail</h3>
-                <p>{content.email || "saleskss@twim21.com"}</p>
+                <p>{content.email || "thankyou@daonrs.kr"}</p>
               </div>
             </div>
           </div>

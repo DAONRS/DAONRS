@@ -1,5 +1,48 @@
 /* App.css */
 
+/* ------------------------------------------------------------------
+   화면 전환 페이드 인
+
+   App.jsx 가 라우트 변경마다 .page-enter 클래스를 뗐다 붙여 재생시킨다.
+   리마운트를 일으키지 않으므로 Banner 등장 애니메이션은 초기화되지 않는다.
+
+   ★ animation-fill-mode 는 반드시 backwards 여야 한다 (both / forwards 금지)
+
+   both 나 forwards 를 쓰면 애니메이션이 끝난 뒤에도 마지막 키프레임이
+   요소에 남는다. 이때 `transform: none` 은 `none` 으로 남는 게 아니라
+   보간 결과인 matrix(1, 0, 0, 1, 0, 0) 으로 계산된다.
+   transform 이 none 이 아니면 그 요소는 position: absolute / fixed 자손의
+   컨테이닝 블록이 되어버린다.
+
+   실제로 both 를 썼을 때 .main-content 에 matrix(1,0,0,1,0,0) 이 남아
+   - 배너 위에 떠 있어야 할 SubNav(.sub-nav-container, position:absolute;
+     bottom:40px)가 .main-content(수천 px) 기준으로 잡혀 페이지 맨 아래로 밀렸고
+   - position: fixed 모달(CasesModal 등)도 같은 이유로 어긋난다.
+
+   backwards 는 지연 구간에만 from 을 적용하고 종료 후에는 원래 값으로
+   돌아가므로 transform 이 남지 않는다. 종료 시점 값(opacity 1 / transform none)이
+   기본값과 같으므로 깜빡임도 없다.
+
+   같은 이유로 index.css 의 .reveal 은 animation 대신 transition 을 쓴다.
+   ------------------------------------------------------------------ */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.main-content.page-enter {
+  animation: pageEnter 280ms cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+}
+
+/* prefers-reduced-motion 게이트를 두지 않는다.
+   이유는 index.css 의 .reveal 주석 참고 (스크롤 감각과 기준을 통일). */
+
 .floating-brochure-btn {
   position: fixed;
   bottom: 30px;
@@ -21,13 +64,41 @@
   align-items: center;
   justify-content: center; /* 중앙 정렬 */
   text-decoration: none;
-  
-  /* 호버 효과 */
-  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+
+  /* 기본은 숨김: 40vh 이상 스크롤하면 .is-visible 로 서서히 등장
+     visibility 는 페이드아웃이 끝난 뒤에 꺼지도록 지연시킨다 */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.92);
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 0.45s,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.floating-brochure-btn.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.floating-brochure-btn:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 3px;
 }
 
 /* 호버 시 버튼 액션 */
-.floating-brochure-btn:hover {
+.floating-brochure-btn.is-visible:hover {
   transform: translateY(-4px) scale(1.03); /* 살짝 상승 */
   background-color: #c0471f; 
   box-shadow: 0 8px 25px rgba(217, 83, 37, 0.7); 
@@ -57,8 +128,8 @@
 .floating-brochure-btn .btn-text-line1,
 .floating-brochure-btn .btn-text-line2 {
   font-size: 10px; /* 폰트 크기 설정 */
-  font-weight: 700; /* 굵은 글씨 */
-  font-family: 'Pretendard', sans-serif; /* (선택사항) 폰트 지정 */
+  font-weight: var(--fw-bold); /* 굵은 글씨 */
+  font-family: var(--font-base);
   letter-spacing: -0.5px; /* 자간 조정으로 꽉 차 보이게 */
   color: #ffffff;
   text-align: center;

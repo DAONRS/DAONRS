@@ -4,6 +4,8 @@ import { supabase } from '../supabaseClient';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css'; 
 import './AdminDashboardPage.css';
+import { toPlainText } from '../utils/sanitizeHtml';
+import { runMutation } from '../utils/supabaseMutation';
 
 const AdminDashboardPage = () => {
   const [activeTab, setActiveTab] = useState('history'); 
@@ -53,23 +55,57 @@ const AdminDashboardPage = () => {
 
   const handleHistorySubmit = async (e) => {
     e.preventDefault();
-    const generatedOrderIndex = parseInt(`${historyYear}00`);
+    const year = historyYear.trim();
+    // 연도는 정렬값(order_index)의 기준이므로 4자리 숫자만 허용한다
+    if (!/^\d{4}$/.test(year)) {
+      alert('연도는 4자리 숫자로 입력해 주세요. (예: 2024)');
+      return;
+    }
+    const generatedOrderIndex = parseInt(`${year}00`, 10);
     
     // DB 구조 호환성을 위해 단일 content를 배열 형태로 감싸서 저장합니다.
     const payload = { 
-      year: historyYear, 
+      year, 
       events: [{ content: editorContent }], 
       order_index: generatedOrderIndex 
     };
 
-    if (isEditingHistory) {
-      await supabase.from('history').update(payload).eq('id', currentHistoryId);
-    } else {
-      await supabase.from('history').insert([payload]);
+    try {
+      if (isEditingHistory) {
+        await runMutation(supabase.from('history').update(payload).eq('id', currentHistoryId).select('id'), '연혁 수정');
+      } else {
+        await runMutation(supabase.from('history').insert([payload]).select('id'), '연혁 등록');
+      }
+    } catch (err) {
+      // 실패 시 입력 내용을 유지해 다시 시도할 수 있게 한다
+      alert(err.message);
+      return;
     }
     alert(isEditingHistory ? '수정되었습니다.' : '등록되었습니다.');
     resetHistoryForm();
     fetchData();
+  };
+
+  const handleHistoryDelete = async (item) => {
+    if (!window.confirm('삭제하시겠습니까?')) return;
+    try {
+      await runMutation(supabase.from('history').delete().eq('id', item.id).select('id'), '연혁 삭제');
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      fetchData();
+    }
+  };
+
+  const handleInquiryRead = async (inquiry) => {
+    if (!window.confirm('읽음 처리하시겠습니까?')) return;
+    try {
+      await runMutation(supabase.from('inquiries').update({ is_read: true }).eq('id', inquiry.id).select('id'), '읽음 처리');
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      fetchData();
+    }
   };
 
   return (
@@ -153,15 +189,11 @@ const AdminDashboardPage = () => {
                     <tr key={item.id}>
                       <td style={{ fontWeight: '800', fontSize: '1.1rem', color: '#4f46e5' }}>{item.year}년</td>
                       <td>
-                        <div className="quill-preview-small" style={{ fontSize: '0.95rem', color: '#666' }} dangerouslySetInnerHTML={{ __html: item.events?.[0]?.content?.substring(0, 100) + '...' }} />
+                        <div className="quill-preview-small" style={{ fontSize: '0.95rem', color: '#666' }}>{toPlainText(item.events?.[0]?.content, 100)}</div>
                       </td>
                       <td style={{ textAlign: 'right' }}>
                         <button className="btn-edit" onClick={() => handleEditClick(item)}>수정</button>
-                        <button className="btn-delete" onClick={() => {
-                          if(window.confirm('삭제하시겠습니까?')) {
-                            supabase.from('history').delete().eq('id', item.id).then(() => fetchData());
-                          }
-                        }}>삭제</button>
+                        <button className="btn-delete" onClick={() => handleHistoryDelete(item)}>삭제</button>
                       </td>
                     </tr>
                   ))}
@@ -195,12 +227,7 @@ const AdminDashboardPage = () => {
                   <div className="inquiry-message" style={{ whiteSpace: 'pre-wrap', lineHeight: '1.7', color: '#334155' }}>
                     {inquiry.message}
                   </div>
-                  <button onClick={() => {
-                    if(window.confirm('읽음 처리하시겠습니까?')) {
-                      supabase.from('inquiries').update({ is_read: true }).eq('id', inquiry.id)
-                        .then(() => fetchData());
-                    }
-                  }} className="btn-complete" style={{ marginTop: '20px' }}>
+                  <button onClick={() => handleInquiryRead(inquiry)} className="btn-complete" style={{ marginTop: '20px' }}>
                     ✓ 확인 완료
                   </button>
                 </div>

@@ -36,16 +36,24 @@
   .header-container.is-visible {
     top: 0 !important;
   }
+  /* 관리자 로그인 시 상단 관리자 바(z-index 1100) 아래로 내려야
+     햄버거 버튼이 가려지지 않는다. --admin-bar-h 는 AdminTopNav 가 실측해 넣는다. */
+  .header-container.is-admin.is-visible {
+    top: var(--admin-bar-h, 51px) !important;
+  }
 }
 
 @media (min-width: 1024px) {
-  .header-container.is-admin.is-visible { top: 58px; }
+  .header-container.is-admin.is-visible { top: var(--admin-bar-h, 58px); }
   .header-container.is-visible:not(.is-admin) { top: 0; }
 }
 
 .header-container.is-scrolled {
   background-color: #FFFFFF;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  /* 1px 경계선 + 아주 옅은 확산 그림자 → 뭉개지지 않고 또렷한 경계 */
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 /* --- Logo Styling --- */
@@ -83,16 +91,23 @@
   .desktop-nav-container a, .desktop-nav-container span {
     padding: 0 clamp(10px, 1.8vw, 25px);
     text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
+    font-family: var(--font-base);
+    font-weight: var(--fw-semibold);
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
     color: #FFFFFF;
-    transition: 0.3s;
+    transition: color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
   }
+  .desktop-nav-container a:hover,
+  .desktop-nav-container span:hover { opacity: 0.72; }
   .desktop-nav-container.is-scrolled a, 
   .desktop-nav-container.is-scrolled span { color: #000000; }
   
-  .desktop-nav-container a.active, 
-  .desktop-nav-container span.active { box-shadow: inset 0 -5px 0 0 currentColor; }
+  .desktop-nav-container a.active,
+  .desktop-nav-container span.active {
+    box-shadow: inset 0 -3px 0 0 currentColor;   /* 5px → 3px, 과한 두께 완화 */
+    opacity: 1;
+  }
 
   .dropdown-menu {
     position: absolute;
@@ -115,61 +130,120 @@
   }
 
   /* [수정 부분] 드롭다운 내부 메뉴 링크 스타일 및 활성화 가로줄 */
-  .dropdown-menu a { 
+  .dropdown-menu a {
     position: relative;        /* 가상요소 ::after의 기준점 */
-    color: #FFFFFF; 
-    text-decoration: none; 
-    font-weight: 500; 
+    color: #FFFFFF;
+    text-decoration: none;
+    font-family: var(--font-base);
+    font-weight: var(--fw-medium);
+    font-size: 0.98rem;
+    letter-spacing: -0.02em;
     padding-bottom: 8px;       /* 텍스트와 가로줄 사이의 간격 조정 */
     display: inline-block;
+    transition: opacity 0.2s ease;
   }
   .dropdown-menu.is-scrolled a { color: #000000; }
+  .dropdown-menu a:hover { opacity: 0.65; }
 
   /* [수정 부분] 드롭다운 active 상태 가로줄 생성 */
+  .dropdown-menu a.active {
+    font-weight: var(--fw-semibold);
+    opacity: 1;
+  }
+
   .dropdown-menu a.active::after {
     content: '';
     position: absolute;
     bottom: 0;                 /* padding-bottom의 끝부분에 위치 */
     left: 0;
     width: 100%;               /* 텍스트 너비만큼 줄 생성 */
-    height: 3px;               /* 가로줄 두께 */
+    height: 2px;               /* 3px → 2px, 얇게 정돈 */
+    border-radius: 1px;
     background-color: currentColor; /* 상위 텍스트 색상(검정/흰색) 자동 적용 */
   }
 }
 
 /* --- Hamburger & Close Button --- */
 .hamburger-menu, .close-button {
+  /* [수정] position:relative 추가.
+     기존에는 .close-button 내부 span 이 position:absolute 인데
+     기준이 될 positioned 부모가 없어 X 표시가 엉뚱한 위치에 잡혔다. */
+  position: relative;
   background: none;
   border: none;
   cursor: pointer;
   z-index: 2600;
-  padding: 10px;
-  width: 44px;
+  padding: 0;
+  width: 44px;               /* 터치 영역 44px 유지 */
   height: 44px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  transition: background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 닫기(X) 버튼은 기존의 둥근 호버 배경을 그대로 유지한다.
+   내부 span 이 position:absolute 라 gap 은 영향을 주지 않는다. */
+.close-button {
+  gap: 5px;
+  border-radius: 10px;
+}
+
+/* ------------------------------------------------------------------
+   햄버거 버튼
+
+   굵고 각진 3줄, 배경/테두리 장식 없는 미니멀 스타일.
+   - 바: 32 × 3px, 모서리 각짐 (border-radius: 0)
+   - 바 간격: 8px → 전체 높이 3*3 + 8*2 = 25px
+   - 세 줄 모두 같은 길이 (가운데 바만 짧게 하던 처리 제거)
+   - 호버 시 배경 틴트 없음
+
+   터치 영역은 접근성 기준(44px)을 지키기 위해 44 × 44 를 유지하고,
+   그 안에서 32px 바를 중앙 정렬한다.
+   ------------------------------------------------------------------ */
+.hamburger-menu {
+  gap: 8px;
+  border-radius: 0;
+  background-color: transparent;
 }
 
 .hamburger-menu .bar {
-  width: 24px;
-  height: 2px;
-  margin: 2px 0;
+  width: 32px;
+  height: 3px;
+  margin: 0;                 /* 간격은 부모의 gap 이 담당 */
+  border-radius: 0;
   background-color: #FFFFFF;
-  transition: 0.3s;
+  transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
 }
 
-.header-container.is-scrolled .hamburger-menu .bar { background-color: #000 !important; }
+.hamburger-menu:hover { background-color: transparent; }
+.hamburger-menu:active { transform: scale(0.94); }
+
+.header-container.is-scrolled .hamburger-menu .bar { background-color: #111 !important; }
+
+/* 모바일에서도 배경 틴트 없이 동일하게 */
+@media (max-width: 1023px) {
+  .hamburger-menu:hover { background-color: transparent; }
+}
 
 .close-button span {
   position: absolute;
-  width: 28px;
-  height: 1px;
-  background-color: #000;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 2px;
+  margin: -1px 0 0 -11px;    /* 정확한 중앙 정렬 */
+  border-radius: 2px;
+  background-color: #111;
+  transition: background-color 0.2s ease;
 }
 .close-button span:nth-child(1) { transform: rotate(45deg); }
 .close-button span:nth-child(2) { transform: rotate(-45deg); }
+
+.close-button:hover { background-color: rgba(0, 0, 0, 0.05); }
+.close-button:active { transform: scale(0.94); }
 
 /* --- Side Panel & Fullscreen Wrapper --- */
 .side-panel-wrapper,
@@ -192,6 +266,36 @@
   opacity: 1;
   visibility: visible;
   transition: opacity 0.4s ease, visibility 0s ease 0s;
+}
+
+/* ------------------------------------------------------------------
+   데스크톱 전체 화면 메뉴는 반투명 흰색 — 뒤 페이지가 은은히 비친다.
+   (모바일 사이드 패널은 불투명 흰색 그대로 둔다)
+
+   단, 메뉴가 열릴 때 뒤에 깔리는 .overlay 가 rgba(0,0,0,0.5) 이라
+   그대로 두면 반투명 배경이 회색으로 탁해진다.
+   전체 화면 메뉴는 화면을 100% 덮어 바깥 클릭이 불가능하므로
+   이때만 오버레이를 투명하게 만든다 (요소는 그대로 두어 동작은 유지).
+   ------------------------------------------------------------------ */
+.fullscreen-nav-wrapper {
+  background: rgba(255, 255, 255, 0.9);
+  transition: opacity 0.5s ease, visibility 0s ease 0.5s;
+}
+
+.fullscreen-nav-wrapper.is-open {
+  transition: opacity 0.5s ease, visibility 0s ease 0s;
+}
+
+.fullscreen-nav-wrapper.is-open ~ .overlay,
+.side-panel-wrapper.is-open ~ .overlay {
+  background: transparent;
+}
+
+/* 모바일 사이드 패널도 100vw 를 덮으므로 동일하게 반투명 처리 */
+@media (max-width: 1023px) {
+  .side-panel-wrapper {
+    background: rgba(255, 255, 255, 0.9);
+  }
 }
 
 .menu-wrapper {
@@ -230,17 +334,32 @@
 
   .nav-list:not(.is-desktop) .menu-title-btn,
   .nav-list:not(.is-desktop) > ul > li > a {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.6rem, 5vh, 2rem); 
-    padding: 20px 5vw 20px 15vw; 
-    font-weight: 500;    color: #111;
+    /* [수정] 'Playfair Display' 는 로드된 적이 없는 라틴 전용 서체라
+       한글 메뉴가 브라우저 기본 명조체로 떨어지고 있었다.
+       제목 전용 서체 토큰(--font-display = IBM Plex Sans KR)으로 통일한다.
+       text-transform:uppercase 는 한글에 아무 효과가 없어 제거. */
+    font-family: var(--font-display);
+    /* 태블릿~작은 데스크톱: 48px (레퍼런스 동일). 폰은 아래에서 36px 로 줄인다 */
+    font-size: 3rem;
+    padding: 2vh 4vw 2vh 8vw;
+    font-weight: var(--fw-semibold);
+    letter-spacing: -0.03em;
+    line-height: 1.3;
+    color: #111;
     text-align: left;
-    text-transform: uppercase;
     display: block;
     width: 100%;
     background: none;
     border: none;
     text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .nav-list:not(.is-desktop) .menu-title-btn:hover,
+  .nav-list:not(.is-desktop) .menu-title-btn.is-active,
+  .nav-list:not(.is-desktop) > ul > li > a:hover {
+    color: #2e7d32;
   }
 
   .nav-list:not(.is-desktop) .mobile-submenu {
@@ -251,36 +370,58 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 12px 25px;
-    padding: 0 5vw 0 15vw;
+    gap: 3px 3.5vw;
+    padding: 0 4vw 0 8vw;
   }
 
   .nav-list:not(.is-desktop) .mobile-submenu.show {
     max-height: 200px;
     opacity: 1;
-    padding-bottom: 20px; 
+    padding-top: 2vh;
+    padding-bottom: 2vh;
   }
-  
+
   .nav-list:not(.is-desktop) .mobile-submenu li a {
-    font-size: clamp(1rem, 2.5vh, 1.2rem); 
-    color: #333;
+    font-family: var(--font-base);
+    font-size: 0.9375rem;   /* 15px */
+    color: #111;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.02em;
+    transition: color 0.2s ease;
+  }
+
+  .nav-list:not(.is-desktop) .mobile-submenu li a:hover,
+  .nav-list:not(.is-desktop) .mobile-submenu li a.active {
+    color: #2e7d32;
+  }
+
+}
+
+/* 휴대폰 폭에서는 대메뉴를 36px 로 (레퍼런스와 동일한 분기) */
+@media (max-width: 812px) {
+  .nav-list:not(.is-desktop) .menu-title-btn,
+  .nav-list:not(.is-desktop) > ul > li > a {
+    font-size: 2.25rem;   /* 36px */
   }
 }
 
 /* --- [수정 반영] 데스크톱 전체 화면 메뉴 --- */
-.fullscreen-content { 
-  padding-top: 5vh; 
+.fullscreen-content {
+  padding-top: 0;
   display: flex;
-  justify-content: flex-start; 
-  align-items: flex-start;
+  flex-direction: column;
   height: calc(100vh - 80px);
   overflow-y: auto;
 }
 
+/* 세로 중앙 정렬.
+   justify-content: center 대신 margin-block: auto 를 쓰는 이유 —
+   내용이 화면보다 길어지면 center 는 위쪽이 잘려 스크롤해도 못 보게 된다.
+   auto 마진은 넘칠 때 자동으로 위 정렬로 떨어져 잘림이 없다. */
 .fullscreen-content .nav-list {
   width: 100%;
+  margin-block: auto;
 }
 
 .nav-list.is-desktop .menu-wrapper {
@@ -293,54 +434,76 @@
   flex-direction: column;
 }
 
-.nav-list.is-desktop .menu-wrapper > ul > li { 
-  position: relative; 
-  padding: 10px 5vw 30px 15vw;
+.nav-list.is-desktop .menu-wrapper > ul > li {
+  position: relative;
+  padding: 3vh 12vw;
   width: 100%;
   box-sizing: border-box;
 }
 
-.nav-list.is-desktop .main-menu-group { 
-  display: flex; 
-  align-items: baseline; 
+/* 폭이 좁아지면 좌우 여백과 글자 크기를 줄인다 */
+@media (max-width: 1399px) {
+  .nav-list.is-desktop .menu-wrapper > ul > li {
+    padding: 2vh 4vw 2vh 8vw;
+  }
 }
 
-.nav-list.is-desktop .main-menu-item { 
-  width: 320px; 
-  font-size: clamp(2.2rem, 4vw, 3rem); 
-  font-weight: 500; 
-  font-family: 'Playfair Display', serif;
-  flex-shrink: 0; 
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.nav-list.is-desktop .main-menu-group {
+  display: flex;
+  align-items: center;
+}
+
+.nav-list.is-desktop .main-menu-item {
+  width: 530px;
+  /* [수정] 'Playfair Display'(미로드 라틴 전용 서체)
+     → 제목 전용 서체 토큰(--font-display = IBM Plex Sans KR)으로 통일.
+     한글에 무효한 text-transform:uppercase 제거,
+     한글에 벌어져 보이던 letter-spacing:1px → 음수 자간으로 조정. */
+  font-family: var(--font-display);
+  /* 1440px 에서 72px (레퍼런스와 동일), 좁아지면 38.4px 까지 축소 */
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  /* 72px 한글을 Bold(700)로 쓰면 지나치게 무겁다 → SemiBold(600) */
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  flex-shrink: 0;
   text-align: left;
 }
 
 .nav-list.is-desktop .main-menu-item a,
 .nav-list.is-desktop .main-menu-item span {
-  color: #000;
+  color: #111;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.nav-list.is-desktop .submenu { 
-  display: flex; 
-  flex-direction: row; 
-  flex-wrap: wrap; 
-  gap: 15px 45px; 
-  list-style: none; 
-  flex: 1; 
+.nav-list.is-desktop .main-menu-item a:hover { color: #2e7d32; }
+
+.nav-list.is-desktop .submenu {
+  display: flex;
+  flex-direction: row;
+  /* 한글 서브메뉴 라벨이 길어 한 줄을 넘칠 수 있으므로 wrap 은 유지한다
+     (레퍼런스는 영문 단문이라 nowrap 이어도 문제가 없었다) */
+  flex-wrap: wrap;
+  gap: 12px 3.5vw;
+  list-style: none;
+  flex: 1;
 }
 
 .nav-list.is-desktop .submenu li a {
-  font-size: clamp(1.1rem, 2vw, 1.4rem); 
-  font-weight: 500;
-  color: #333;
+  font-family: var(--font-base);
+  /* 1440px 에서 20px */
+  font-size: var(--fz-h6);
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.02em;
+  color: #111;
   text-decoration: none;
   transition: color 0.2s ease;
   white-space: nowrap;
 }
 
-.nav-list.is-desktop .submenu li a:hover {
+.nav-list.is-desktop .submenu li a:hover,
+.nav-list.is-desktop .submenu li a.active {
   color: #2e7d32;
 }
 
@@ -377,7 +540,7 @@
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 1px;
-    background: #00000052;
+    background: rgba(0, 0, 0, 0.10);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.9s cubic-bezier(0.23, 1, 0.32, 1);
@@ -392,6 +555,50 @@
 .fullscreen-nav-wrapper.is-open .menu-wrapper > ul > li::before {
     transform: scaleX(1);
 }
+
+/* ------------------------------------------------------------------
+   전체 화면 메뉴 전용 — 구분선을 더 진하게, 더 천천히 그린다.
+   (레퍼런스는 width 0 → 100% 를 2초에 걸쳐 애니메이션한다.
+    여기서는 같은 모양을 레이아웃 재계산 없는 scaleX 로 구현한다)
+   ------------------------------------------------------------------ */
+.fullscreen-nav-wrapper .menu-wrapper > ul > li::before,
+.side-panel-wrapper .menu-wrapper > ul > li::before {
+    background: rgba(0, 0, 0, 0.2);
+    transition: transform 2s ease-in-out;
+}
+
+/* ------------------------------------------------------------------
+   서브메뉴 항목 순차 등장 (항목당 0.1초)
+
+   지연 = 그 행의 기준 지연(--row-delay) + 항목 순번(--i) × 0.1초
+   ------------------------------------------------------------------ */
+.fullscreen-nav-wrapper .nav-list.is-desktop .submenu > li {
+    opacity: 0;
+    transform: translateX(-12px);
+    transition:
+        opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+        transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.fullscreen-nav-wrapper.is-open .nav-list.is-desktop .submenu > li {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(var(--row-delay, 0.3s) + var(--i, 0) * 0.1s);
+}
+
+.fullscreen-nav-wrapper .menu-wrapper > ul > li:nth-child(1) { --row-delay: 0.30s; }
+.fullscreen-nav-wrapper .menu-wrapper > ul > li:nth-child(2) { --row-delay: 0.53s; }
+.fullscreen-nav-wrapper .menu-wrapper > ul > li:nth-child(3) { --row-delay: 0.75s; }
+.fullscreen-nav-wrapper .menu-wrapper > ul > li:nth-child(4) { --row-delay: 0.98s; }
+.fullscreen-nav-wrapper .menu-wrapper > ul > li:nth-child(5) { --row-delay: 1.20s; }
+.fullscreen-nav-wrapper .menu-wrapper > ul > li:nth-child(6) { --row-delay: 1.43s; }
+
+.fullscreen-nav-wrapper .submenu > li:nth-child(1) { --i: 0; }
+.fullscreen-nav-wrapper .submenu > li:nth-child(2) { --i: 1; }
+.fullscreen-nav-wrapper .submenu > li:nth-child(3) { --i: 2; }
+.fullscreen-nav-wrapper .submenu > li:nth-child(4) { --i: 3; }
+.fullscreen-nav-wrapper .submenu > li:nth-child(5) { --i: 4; }
+.fullscreen-nav-wrapper .submenu > li:nth-child(6) { --i: 5; }
 
 /* 1번째 ~ 6번째 아이템 지연 시간 (동일 유지) */
 .side-panel-wrapper.is-open li:nth-child(1) .main-menu-group, .fullscreen-nav-wrapper.is-open li:nth-child(1) .main-menu-group { transition-delay: 0.3s; }
@@ -411,3 +618,43 @@
 
 .side-panel-wrapper.is-open li:nth-child(6) .main-menu-group, .fullscreen-nav-wrapper.is-open li:nth-child(6) .main-menu-group { transition-delay: 1.43s; }
 .side-panel-wrapper.is-open li:nth-child(6)::before, .fullscreen-nav-wrapper.is-open li:nth-child(6)::before { transition-delay: 1.73s; }
+
+/* ------------------------------------------------------------------
+   메뉴 스크롤 영역 스크롤바 정돈 (구조 변경 없음, 시각적 정리만)
+   ------------------------------------------------------------------ */
+.menu-scroll-area,
+.fullscreen-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+}
+
+.menu-scroll-area::-webkit-scrollbar,
+.fullscreen-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.menu-scroll-area::-webkit-scrollbar-track,
+.fullscreen-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.menu-scroll-area::-webkit-scrollbar-thumb,
+.fullscreen-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.18);
+  border-radius: 3px;
+}
+
+.menu-scroll-area::-webkit-scrollbar-thumb:hover,
+.fullscreen-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.30);
+}
+
+/* ------------------------------------------------------------------
+   prefers-reduced-motion 게이트를 두지 않는다.
+
+   예전에는 여기서 메뉴의 순차 등장 애니메이션을 생략했다. 그런데
+   Windows 의 "애니메이션 효과" 를 끈 PC 는 전부 reduce 로 잡히기 때문에
+   그 환경에서는 메뉴가 아무 연출 없이 통째로 나타났다.
+   스크롤 감각(LenisScroller) · 등장 효과(index.css .reveal) 와 기준을
+   맞춰, 메뉴 연출도 OS 설정과 무관하게 항상 동일하게 제공한다.
+   ------------------------------------------------------------------ */

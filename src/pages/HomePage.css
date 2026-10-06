@@ -84,13 +84,17 @@
 }
 
 .homepage-swiper .slide-content h2 {
-  font-size: clamp(2rem, 5vw, 4rem);
+  font-family: var(--font-display);
+  /* [수정] font-weight 미지정 시 Tailwind preflight 가 h2 굵기를 inherit 로 리셋해
+     40px 대형 제목이 500 으로 렌더되고 있었다. 다른 제목(700)과 맞춘다. */
+  font-weight: var(--fw-bold);
+  font-size: var(--fz-display-2);
   margin-bottom: 15px;
   word-break: keep-all;
 }
 
 .homepage-swiper .slide-content p {
-  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-size: var(--fz-h5);
   opacity: 0.9;
   margin-bottom: 30px;
 }
@@ -101,8 +105,8 @@
   gap: 8px;
   color: #fff;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fz-ui);
   padding: 12px 28px;
   background-color: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.4);

@@ -7,53 +7,87 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  
+
   /* 디자인 스타일: 반투명 배경 및 둥근 테두리 */
-  background-color: rgba(255, 255, 255, 0.2); 
-  backdrop-filter: blur(8px); /* 조금 더 선명한 블러 효과 */
-  padding: 10px 30px;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: 50px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
+  /* [변경] 좌우 패딩은 ul(스크롤 영역)로 이전.
+     컨테이너에 두면 스크롤 끝에서 여백이 사라져 글자가 테두리에 붙음 */
+  padding: 10px 0;
+
   /* --- 반응형 너비 설정 --- */
-  width: max-content;       /* 내용물만큼 너비 차지 */
-  max-width: 90%;           /* 화면 양끝 여백 확보 (모바일/태블릿) */
+  width: max-content;                 /* 내용물만큼 너비 차지 */
+  max-width: calc(100% - 32px);       /* 화면 양끝 고정 여백 확보 */
   box-sizing: border-box;
-  
-  /* 화면이 커져도 일정 이상 넓어지지 않도록 제한 */
-  @media (min-width: 1024px) {
-    max-width: 800px;       /* 데스크톱 최대 너비 제한 */
-  }
+}
 
-  /* 모바일 대응: 기존 display: none 삭제 후 스타일 조정 */
-  @media (max-width: 1023px) {
-    bottom: 20px;           /* 모바일에서는 하단 간격 조정 */
-    padding: 8px 20px;      /* 내부 여백 살짝 축소 */
-    overflow-x: auto;       /* 메뉴가 많을 경우 가로 스크롤 허용 */
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;  /* Firefox 스크롤바 숨김 */
+/* 화면이 커져도 일정 이상 넓어지지 않도록 제한 */
+@media (min-width: 1024px) {
+  .sub-nav-container {
+    max-width: 800px;
   }
 }
 
-/* Chrome, Safari 스크롤바 숨김 */
-.sub-nav-container::-webkit-scrollbar {
-  display: none;
-}
-
+/* ------------------------------------------------------------------
+   스크롤 영역 = ul
+   - justify-content: center 를 flex-start 로 변경.
+     (플렉스 컨테이너가 넘칠 때 center 는 왼쪽 항목이 스크롤로도
+      되돌아갈 수 없게 잘려나가는 문제가 있음 → 좌우 잘림의 주 원인)
+   - 컨테이너가 width:max-content 이므로 항목이 적을 땐 자동으로 중앙에 옴
+   ------------------------------------------------------------------ */
 .sub-nav-container ul {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: flex-start;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 30px;                    /* 컨테이너에서 옮겨온 좌우 여백 */
+
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;              /* Firefox 스크롤바 숨김 */
+  scroll-padding-inline: 30px;
+
+  /* 양끝 페이드 마스크 — JS가 fade-start / fade-end 클래스로 제어.
+     스크롤 여지가 있을 때만 켜지므로, 잘린 게 아니라 "더 있다"는 신호가 됨 */
+  --fade-l: 0px;
+  --fade-r: 0px;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--fade-l),
+    #000 calc(100% - var(--fade-r)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--fade-l),
+    #000 calc(100% - var(--fade-r)),
+    transparent 100%
+  );
+}
+
+.sub-nav-container ul.fade-start { --fade-l: 32px; }
+.sub-nav-container ul.fade-end   { --fade-r: 32px; }
+
+/* Chrome, Safari 스크롤바 숨김 */
+.sub-nav-container::-webkit-scrollbar,
+.sub-nav-container ul::-webkit-scrollbar {
+  display: none;
 }
 
 .sub-nav-container li {
   margin: 0 1.2rem;
   position: relative;
   flex-shrink: 0;           /* 모바일에서 텍스트 압축 방지 */
+  scroll-snap-align: center;
 }
 
 /* 항목 사이 구분선 */
@@ -71,8 +105,8 @@
 .sub-nav-container a {
   color: #fff;
   text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: var(--fw-medium);
+  font-size: var(--fz-sm);
   transition: all 0.3s ease;
   white-space: nowrap;
 }
@@ -85,9 +119,55 @@
 /* 활성화(Active) 상태 스타일 */
 .sub-nav-container a.active {
   color: #fff;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 20px;
   padding: 6px 16px;
   display: inline-block;
+}
+
+/* ------------------------------------------------------------------
+   라벨 전환 — 데스크톱/태블릿은 전체 명칭, 모바일은 축약 명칭
+   ------------------------------------------------------------------ */
+.sub-nav-label-short { display: none; }
+
+@media (max-width: 767px) {
+  .sub-nav-label-full  { display: none; }
+  .sub-nav-label-short { display: inline; }
+}
+
+/* ------------------------------------------------------------------
+   모바일/태블릿 대응
+   ------------------------------------------------------------------ */
+@media (max-width: 1023px) {
+  .sub-nav-container {
+    bottom: 20px;           /* 모바일에서는 하단 간격 조정 */
+    padding: 8px 0;         /* 내부 여백 살짝 축소 */
+    max-width: calc(100% - 24px);
+  }
+
+  .sub-nav-container ul {
+    padding: 0 20px;
+    scroll-padding-inline: 20px;
+    scroll-snap-type: x proximity;
+  }
+
+  .sub-nav-container li {
+    margin: 0 0.85rem;
+  }
+
+  .sub-nav-container li:not(:last-child)::after {
+    right: -0.85rem;
+  }
+
+  .sub-nav-container a.active {
+    padding: 5px 12px;
+  }
+}
+
+/* 모션 최소화 설정 존중 */
+@media (prefers-reduced-motion: reduce) {
+  .sub-nav-container a {
+    transition: none;
+  }
 }

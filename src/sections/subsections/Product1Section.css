@@ -3,9 +3,19 @@
   text-align: center;
 }
 
+/* 브로슈어 이미지: 본문 폭 상한(--reading-max, 960px).
+   좌우 여백은 상위 .sub-section 프레임(--frame-padding)이 담당하므로
+   여기서 padding 을 중복으로 주지 않는다. */
 .product1-image {
-  max-width: 100%;
-  height: auto;
   display: block;
+  width: 100%;
+  max-width: var(--reading-max);
+  height: auto;
   margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* 연속된 이미지 사이 세로 간격 */
+.product1-image + .product1-image {
+  margin-top: clamp(16px, 3vh, 32px);
 }

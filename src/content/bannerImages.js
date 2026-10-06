@@ -1,8 +1,8 @@
-import banner1 from '../assets/images/banner/banner1.jpg';
-import banner2 from '../assets/images/banner/banner2.jpg';
-import banner3 from '../assets/images/banner/banner3.jpg';
-import banner4 from '../assets/images/banner/banner4.jpg';
-import banner5 from '../assets/images/banner/banner5.jpg';
+import banner1 from '../assets/images/banner/banner1.webp';
+import banner2 from '../assets/images/banner/banner2.webp';
+import banner3 from '../assets/images/banner/banner3.webp';
+import banner4 from '../assets/images/banner/banner4.webp';
+import banner5 from '../assets/images/banner/banner5.webp';
 
 const bannerImages = {
   '/': [
@@ -29,11 +29,6 @@ const bannerImages = {
     title: '회사소개',
     subtitle: '혁신적인 기술로 미래를 선도하는 기업, DAONRS입니다.',
     image: banner1
-  },
-  '/business': {
-    title: '인증현황',
-    subtitle: '기술의 깊이로 증명하는 DAONRS의 독보적인 전문 사업 영역입니다.',
-    image: banner2
   },
   '/products': {
     title: '제품소개',

@@ -12,7 +12,7 @@
   padding: 40px 20px;
   background-color: var(--bg-color);
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-family: var(--font-base) !important;
   text-align: left !important;
 }
 
@@ -34,7 +34,7 @@
 
 .admin-dashboard-header h2 {
   font-size: 24px;
-  font-weight: 800;
+  font-weight: var(--fw-extrabold);
   margin: 0;
 }
 
@@ -42,7 +42,7 @@
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   cursor: pointer;
   border: 1px solid #e2e8f0;
   background: white;
@@ -68,7 +68,7 @@
   border-radius: 10px;
   background: #e2e8f0;
   border: none;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   cursor: pointer;
 }
 
@@ -87,13 +87,13 @@
 
 .section-title {
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: var(--fw-extrabold);
   margin-bottom: 20px;
 }
 
 .form-label {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   margin-bottom: 10px;
   display: block;
   color: var(--text-muted);

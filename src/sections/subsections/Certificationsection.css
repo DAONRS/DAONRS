@@ -14,11 +14,8 @@
   text-align: center;
 }
 
-.section-header .main-title {
-  margin-top: 10px;
-  font-size: 18px;
-  color: #666;
-}
+/* [제거] .section-header .main-title — JSX 는 .subsection-header 만 사용하고
+   .main-title 은 HeroBanner 의 .banner-text 하위에만 존재하므로 매칭되지 않는 죽은 규칙이었다. */
 
 /* 2. 관리자 툴바 (수정/업로드 버튼) */
 .admin-toolbar {
@@ -35,7 +32,7 @@
   border: 1px solid #ff5e1a;
   background: #fff;
   color: #ff5e1a;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -51,8 +48,8 @@
   background-color: #333;
   color: #fff;
   border-radius: 30px;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: var(--fz-meta);
+  font-weight: var(--fw-bold);
   transition: background 0.2s;
 }
 
@@ -129,8 +126,8 @@
   border: none;
   border-radius: 4px;
   background: #fff;
-  font-size: 12px;
-  font-weight: bold;
+  font-size: var(--fz-2xs);
+  font-weight: var(--fw-bold);
   cursor: pointer;
 }
 
@@ -143,7 +140,7 @@
 .card-info {
   padding: 10px;
   background: #fff;
-  font-size: 13px;
+  font-size: var(--fz-xs);
   color: #333;
   border-top: 1px solid #f0f0f0;
   white-space: nowrap;
@@ -156,14 +153,38 @@
   margin-bottom: 0.5rem; /* 본문 아래 여백 축소 */
 }
 
+/* 인증 갤러리: PC - 가로 3개씩 자동 줄바꿈(마지막 줄 중앙정렬) / 모바일 - 1열 세로 스크롤 */
+/* max-width = 190*3 + 15*2(gap) + 40(좌우 padding) = 640px → 한 줄에 정확히 3개 */
 .cert-gallery-grid {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center; /* 3개 미만인 마지막 줄도 중앙정렬 */
+  align-items: flex-start;
   gap: 15px;
   padding: 10px 20px 20px 20px;
-  max-width: 1200px;
+  max-width: 640px;
   margin: 0 auto;
+}
+
+/* 공통 .gallery-item 의 width:100% 대신 고정 폭을 사용해 3개 단위 줄바꿈을 보장 */
+.cert-gallery-grid .gallery-item {
+  flex: 0 1 190px;
+  width: 190px;
+  max-width: 190px;
+}
+
+/* 스마트폰: 1열로 쌓아 아래로 스크롤하며 하나씩 확인 */
+@media (max-width: 767px) {
+  .cert-gallery-grid {
+    max-width: 300px;
+    gap: 20px;
+  }
+
+  .cert-gallery-grid .gallery-item {
+    flex: 0 1 260px;
+    width: 100%;
+    max-width: 260px;
+  }
 }
 
 .grid-row {

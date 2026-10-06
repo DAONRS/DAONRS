@@ -8,8 +8,12 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import './CasePreviewSection.css';
+import { useRevealGroup } from '../../hooks/useScrollReveal';
 
 const CasePreviewSection = () => {
+  // 스크롤 진입 시 섹션 단위 등장 애니메이션 (index.css 의 .reveal)
+  const reveal = useRevealGroup();
+
     const [recentCases, setRecentCases] = useState([]);
     const navigate = useNavigate();
     
@@ -52,12 +56,12 @@ const CasePreviewSection = () => {
         <section className="section">
             <div className="sub-section">
                 <div className="case-preview-body">
-                    <div className="portfolio-intro">
+                    <div {...reveal('intro', 'portfolio-intro')}>
                         <p className="portfolio-sub">LATEST PROJECTS</p>
                         <h3 className="portfolio-main">현장에서 증명된 스마트 농업 솔루션</h3>
                     </div>
 
-                    <div className="custom-swiper-container">
+                    <div {...reveal('swiper', 'custom-swiper-container')}>
                         {/* 이전 버튼: ref 연결 */}
                         <button ref={prevRef} className="nav-btn-custom prev-trigger">
                             <span className="arrow">〈</span>

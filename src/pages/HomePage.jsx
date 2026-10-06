@@ -1,8 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SubNav from '../components/SubNav/SubNav';
-import HeroBanner from '../components/HeroBanner';
-import ImageGrid from '../components/ImageGrid';
 import CasePreviewSection from '../sections/subsections/CasePreviewSection';
 
 import { menuItems } from '../content/menuData'; 
@@ -14,9 +12,6 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-import daonrs_img from '../assets/images/daonrs_img.jpg';
-import site_logo from '../assets/images/site_logo.png';
-import daoni from '../assets/images/daoni.png';
 
 import './HomePage.css';
 
@@ -33,19 +28,7 @@ function HomePage() {
     };
   });
 
-  const heroBannerData = {
-    title: "DAONRS와 함께하는 혁신",
-    description: "최고의 기술력으로 고객의 성공을 이끌어갑니다.",
-    buttonText: "자세히 알아보기",
-    buttonLink: "/about/vision"
-  };
 
-  const imagesForGrid = [
-    { src: daonrs_img, alt: "DAONRS Image 1" },
-    { src: site_logo, alt: "DAONRS Logo" },
-    { src: daoni, alt: "DAONI" },
-    { src: daonrs_img, alt: "DAONRS Image 2" },
-  ];
 
   return (
     <>
@@ -102,8 +85,6 @@ function HomePage() {
       <SubNav />
       <CasePreviewSection />
 
-      <HeroBanner {...heroBannerData} />
-      <ImageGrid images={imagesForGrid} />
     </>
   );
 }

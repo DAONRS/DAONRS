@@ -3,9 +3,56 @@
   text-align: center;
 }
 
+/* 브로슈어 이미지: 본문 폭 상한(--reading-max, 960px).
+   좌우 여백은 상위 .sub-section 프레임(--frame-padding)이 담당하므로
+   여기서 padding 을 중복으로 주지 않는다. */
 .product2-image {
-  max-width: 100%;
-  height: auto;
   display: block;
+  width: 100%;
+  max-width: var(--reading-max);
+  height: auto;
   margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* 연속된 이미지 사이 세로 간격 */
+.product2-image + .product2-image {
+  margin-top: clamp(16px, 3vh, 32px);
+}
+
+/* ------------------------------------------------------------------
+   제목 + 다오니 로고 — 수정 전 형태 그대로.
+   기존 인라인 style 을 클래스로 옮긴 것이며 데스크톱 렌더링 결과는 동일하다.
+   ------------------------------------------------------------------ */
+.product2-title {
+  display: flex;
+  align-items: flex-end;
+}
+
+.product2-logo-link {
+  line-height: 1;
+  flex: none;          /* 여유 폭이 있는 데스크톱에서는 아무 영향 없음.
+                          좁은 폭에서 로고 width 만 줄어 가로로 눌리는 것을 막는다. */
+}
+
+.product2-logo {
+  display: block;      /* 하단 공백 제거 */
+  height: 60px;
+  margin-left: 10px;
+  filter: brightness(0);
+}
+
+/* 모바일 전용 보정: 데스크톱 형태는 건드리지 않고,
+   좁은 화면에서 제목이 넘치거나 로고가 찌그러지는 것만 방지한다. */
+@media (max-width: 767px) {
+  .product2-title {
+    flex-wrap: wrap;
+    align-items: baseline;
+    row-gap: 6px;
+  }
+
+  .product2-logo {
+    height: 40px;
+    margin-left: 8px;
+  }
 }

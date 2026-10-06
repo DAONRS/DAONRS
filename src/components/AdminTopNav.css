@@ -22,7 +22,7 @@
 
 .admin-top-nav p {
   margin: 0;
-  font-weight: bold;
+  font-weight: var(--fw-bold);
 }
 
 .admin-top-nav .nav-buttons {
@@ -37,7 +37,7 @@
   border-radius: 4px;
   padding: 5px 15px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: var(--fw-bold);
   transition: background-color 0.3s, color 0.3s;
   white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }

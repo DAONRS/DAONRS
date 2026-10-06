@@ -3,11 +3,18 @@ import ReactQuill from 'react-quill-new';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 import { createImageHandler, createVideoHandler, getEditorModules, convertYoutubeLinksToIframes } from '../../hooks/editorHandlers';
+import { sanitizeHtml } from '../../utils/sanitizeHtml';
 
 import 'react-quill-new/dist/quill.snow.css';
 import './CaseExampleSection.css';
+import { useRevealGroup } from '../../hooks/useScrollReveal';
+import { useAuth } from '../../contexts/AuthContext';
+import { runMutation, removeStorageFiles } from '../../utils/supabaseMutation';
 
 const CaseExampleSection = forwardRef((props, ref) => {
+  // 스크롤 진입 시 섹션 단위 등장 애니메이션 (index.css 의 .reveal)
+  const reveal = useRevealGroup();
+
     const [caseExamples, setCaseExamples] = useState([]);
     const [viewMode, setViewMode] = useState('list'); 
     const [selectedCase, setSelectedCase] = useState(null);
@@ -18,7 +25,9 @@ const CaseExampleSection = forwardRef((props, ref) => {
     const [totalCount, setTotalCount] = useState(0); 
     const itemsPerPage = 10;
 
-    const [user, setUser] = useState(null);
+    // 관리자 여부는 AuthContext 의 공용 세션을 사용한다 (로그인/로그아웃 즉시 반영)
+    const { session } = useAuth();
+    const user = session?.user ?? null;
     const [isEditing, setIsEditing] = useState(false);
     
     const [content, setContent] = useState('');
@@ -29,17 +38,6 @@ const CaseExampleSection = forwardRef((props, ref) => {
 
     const quillRef = useRef(null);
     const BUCKET_NAME = 'daonrs';
-
-    useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
-        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-        });
-        
-        return () => {
-            authListener.subscription.unsubscribe();
-        };
-    }, []);
 
     // 메인 홈 화면 등에서 넘어온 selectedId가 있으면 자동으로 해당 사례 상세 정보를 조회하여 띄워줌
     useEffect(() => {
@@ -133,6 +131,20 @@ const CaseExampleSection = forwardRef((props, ref) => {
         return 'https://via.placeholder.com/600x400?text=No+Image';
     };
 
+    // 본문에 포함된 유튜브(일반/쇼츠/embed) 주소를 원본 시청용 URL로 변환
+    // 값이 없으면 null을 반환하며, 이 경우 목록 카드에 링크 아이콘을 표시하지 않는다.
+    const getSourceUrl = (htmlContent) => {
+        if (!htmlContent) return null;
+
+        const ytRegex = /(?:youtube\.com\/(?:embed\/|shorts\/|v\/|watch\?[^"'\s]*v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const ytMatch = ytRegex.exec(htmlContent);
+        if (ytMatch && ytMatch[1]) {
+            return `https://www.youtube.com/watch?v=${ytMatch[1]}`;
+        }
+
+        return null;
+    };
+
     const handleSave = async () => {
         if (!user) return alert('관리자 권한이 없습니다.');
         if (!region || !crop || !content) return alert('지역, 작물 및 상세 내용을 입력하세요.');
@@ -142,17 +154,17 @@ const CaseExampleSection = forwardRef((props, ref) => {
 
         try {
             if (isEditing) {
-                await supabase.from('case_examples').update(postData).eq('id', selectedCase.id);
+                await runMutation(supabase.from('case_examples').update(postData).eq('id', selectedCase.id).select('id'), '사례 수정');
                 alert('수정되었습니다.');
             } else {
-                await supabase.from('case_examples').insert([postData]);
+                await runMutation(supabase.from('case_examples').insert([postData]).select('id'), '사례 등록');
                 alert('등록되었습니다.');
                 setCurrentPage(1); // 새 글 등록 시 1페이지로 이동
             }
             backToList();
             fetchCases(currentPage);
         } catch (err) {
-            alert('저장 중 오류 발생: ' + err.message);
+            alert(err.message);
         }
     };
 
@@ -169,9 +181,15 @@ const CaseExampleSection = forwardRef((props, ref) => {
             }
         }
 
-        if (filePaths.length > 0) await supabase.storage.from(BUCKET_NAME).remove(filePaths);
-        await supabase.from('case_examples').delete().eq('id', post.id);
-        
+        try {
+            // DB 행을 먼저 지운다. (이미지를 먼저 지웠다가 DB 삭제가 실패하면 깨진 사례가 남는다)
+            await runMutation(supabase.from('case_examples').delete().eq('id', post.id).select('id'), '사례 삭제');
+        } catch (err) {
+            alert(err.message);
+            return;
+        }
+        await removeStorageFiles(supabase, BUCKET_NAME, filePaths);
+
         alert('삭제되었습니다.');
         
         // 삭제 후 현재 페이지에 데이터가 없으면 이전 페이지로 이동
@@ -220,7 +238,7 @@ const CaseExampleSection = forwardRef((props, ref) => {
     return (
         <section ref={ref} id="case-example" className="section">
             <div className="sub-section">
-                <header className="subsection-header">
+                <header {...reveal('head', 'subsection-header')}>
                     <h2 className="subsection-title">환경데이터측정기(다오니) 적용 사례</h2>
                     {user && viewMode === 'list' && (
                         <button onClick={startWriting} className="notice-write-button">실적 등록</button>
@@ -230,20 +248,41 @@ const CaseExampleSection = forwardRef((props, ref) => {
                 <hr className="section-top-line" />
 
                 {/* 1. 목록 화면 */}
-                {viewMode === 'list' && (
-                    <div className="case-grid-container">
+                {(viewMode === 'list' || (viewMode === 'write' && !user)) && (
+                    <div {...reveal('grid', 'case-grid-container')}>
                         <div className="case-examples-grid">
-                            {caseExamples.map((item) => (
-                                <div key={item.id} className="case-card" onClick={() => openDetail(item)}>
-                                    <div className="case-card-thumbnail">
-                                        <img src={getThumbnail(item.content)} alt={item.title} />
+                            {caseExamples.map((item) => {
+                                const sourceUrl = getSourceUrl(item.content);
+                                return (
+                                    <div key={item.id} className="case-card" onClick={() => openDetail(item)}>
+                                        <div className="case-card-thumbnail">
+                                            <img src={getThumbnail(item.content)} alt={item.title} />
+                                        </div>
+                                        <div className="case-card-info">
+                                            <div className="case-card-title-row">
+                                                <h4 className="case-card-title">{item.title}</h4>
+                                                {sourceUrl && (
+                                                    <a
+                                                        href={sourceUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="case-card-link-btn"
+                                                        title="원본 영상 새 창으로 보기"
+                                                        aria-label="원본 영상 새 창으로 보기"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                                            <rect x="2" y="4" width="20" height="16" rx="4" fill="none" stroke="currentColor" strokeWidth="2" />
+                                                            <path d="M10 9.2l5.2 2.8L10 14.8z" fill="currentColor" />
+                                                        </svg>
+                                                    </a>
+                                                )}
+                                            </div>
+                                            <span className="case-card-date">{item.date}</span>
+                                        </div>
                                     </div>
-                                    <div className="case-card-info">
-                                        <h4 className="case-card-title">{item.title}</h4>
-                                        <span className="case-card-date">{item.date}</span>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         {/* 페이지네이션 UI (10개 초과시에만 표시) */}
@@ -298,7 +337,7 @@ const CaseExampleSection = forwardRef((props, ref) => {
                                 </ul>
                             </div>
                         </div>
-                        <div className="detail-body ql-editor" dangerouslySetInnerHTML={{ __html: convertYoutubeLinksToIframes(selectedCase.content) }} />
+                        <div className="detail-body ql-editor" dangerouslySetInnerHTML={{ __html: sanitizeHtml(convertYoutubeLinksToIframes(selectedCase.content)) }} />
                         <div className="detail-footer">
                             <button className="btn-list-go" onClick={backToList}>목록으로</button>
                         </div>

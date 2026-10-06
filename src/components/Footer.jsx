@@ -1,6 +1,6 @@
 import React from 'react';
 import './Footer/Footer.css';
-import daonrslogo from '../assets/images/bt_logo.png';
+import daonrslogo from '../assets/images/bt_logo.webp';
 
 const Footer = React.forwardRef((props, ref) => {
   return (

@@ -11,7 +11,7 @@
 .case-examples-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px; }
 .case-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; overflow: hidden; cursor: pointer; transition: 0.35s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
 .case-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: #ff5e1a; }
-.case-card-thumbnail { width: 100%; aspect-ratio: 16/10; background: #f8f8f8; overflow: hidden; }
+.case-card-thumbnail { position: relative; width: 100%; aspect-ratio: 16/10; background: #f8f8f8; overflow: hidden; }
 .case-card-thumbnail img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
 .case-card:hover .case-card-thumbnail img { transform: scale(1.05); }
 .case-card-info { padding: 25px; }
@@ -19,25 +19,22 @@
 .case-card-date { font-size: var(--fz-meta); color: #aaa; }
 .case-grid-container{ padding-top: 3vh;}
 
-/* --- 2-1. 카드 제목 + 원본 링크 아이콘 --- */
-.case-card-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-.case-card-title-row .case-card-title { margin-bottom: 0; flex: 1; min-width: 0; }
-.case-card-link-btn {
-  flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  background: #f5f5f5;
-  color: #999;
-  text-decoration: none;
-  transition: all 0.25s ease;
+/* --- 2-1. 썸네일 중앙 유튜브 재생 버튼 --- */
+.case-card-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 48px;
+  display: block;
+  opacity: 0.92;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
-.case-card-link-btn svg { width: 19px; height: 19px; display: block; }
-.case-card-link-btn:hover { background: #ff5e1a; color: #fff; transform: scale(1.08); box-shadow: 0 6px 14px rgba(255, 94, 26, 0.3); }
-.case-card-link-btn:focus-visible { outline: 2px solid #ff5e1a; outline-offset: 2px; }
+.case-card-play-btn svg { width: 100%; height: 100%; display: block; }
+.case-card-play-btn:hover { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+.case-card-play-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; border-radius: 12px; }
 
 /* --- 3. 상세 페이지 --- */
 .case-detail-view { max-width: 1000px; margin: 0 auto; padding: 0 20px; }

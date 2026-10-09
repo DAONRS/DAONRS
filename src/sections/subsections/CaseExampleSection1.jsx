@@ -260,27 +260,25 @@ const CaseExampleSection = forwardRef((props, ref) => {
                                     <div key={item.id} className="case-card" onClick={() => openDetail(item)}>
                                         <div className="case-card-thumbnail">
                                             <img src={getThumbnail(item.content)} alt={item.title} />
+                                            {sourceUrl && (
+                                                <a
+                                                    href={sourceUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="case-card-play-btn"
+                                                    title="유튜브에서 보기"
+                                                    aria-label="유튜브에서 보기"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    <svg viewBox="0 0 28 20" aria-hidden="true" focusable="false">
+                                                        <rect width="28" height="20" rx="5" fill="#FF0000" />
+                                                        <path d="M11 5.5l7.5 4.5-7.5 4.5z" fill="#fff" />
+                                                    </svg>
+                                                </a>
+                                            )}
                                         </div>
                                         <div className="case-card-info">
-                                            <div className="case-card-title-row">
-                                                <h4 className="case-card-title">{item.title}</h4>
-                                                {sourceUrl && (
-                                                    <a
-                                                        href={sourceUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="case-card-link-btn"
-                                                        title="원본 영상 새 창으로 보기"
-                                                        aria-label="원본 영상 새 창으로 보기"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                    >
-                                                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                                            <rect x="2" y="4" width="20" height="16" rx="4" fill="none" stroke="currentColor" strokeWidth="2" />
-                                                            <path d="M10 9.2l5.2 2.8L10 14.8z" fill="currentColor" />
-                                                        </svg>
-                                                    </a>
-                                                )}
-                                            </div>
+                                            <h4 className="case-card-title">{item.title}</h4>
                                             <span className="case-card-date">{item.date}</span>
                                         </div>
                                     </div>

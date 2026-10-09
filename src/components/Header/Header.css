@@ -298,6 +298,28 @@
   }
 }
 
+/* ------------------------------------------------------------------
+   전체 메뉴(데스크톱 전체화면 + 모바일 사이드 패널) 글자 크기 토큰
+
+   대메뉴·소메뉴를 같은 구간(375px → 1920px)에서 직선으로 키워
+   어느 화면에서도 비율이 약 2 : 1 로 유지되게 한다.
+   (이전에는 대메뉴 5vw / 소메뉴 1.7vw 로 증가 속도가 달라
+    화면에 따라 2.4 : 1 ~ 3.6 : 1 로 들쭉날쭉했다)
+   ------------------------------------------------------------------ */
+.fullscreen-nav-wrapper,
+.side-panel-wrapper {
+  --fz-menu-main: clamp(2.25rem, 1.825rem + 1.812vw, 4rem);      /* 36 → 64px */
+  --fz-menu-sub:  clamp(1.125rem, 0.943rem + 0.777vw, 1.875rem); /* 18 → 30px */
+}
+
+/* 높이가 낮은 화면(노트북 등)에서는 메뉴 4줄이 스크롤 없이 들어오도록 상한을 낮춘다 */
+@media (max-height: 760px) {
+  .fullscreen-nav-wrapper,
+  .side-panel-wrapper {
+    --fz-menu-main: min(clamp(2.25rem, 1.825rem + 1.812vw, 4rem), 3.25rem);
+  }
+}
+
 .menu-wrapper {
   width: 100%;
   max-width: 1400px;
@@ -339,8 +361,7 @@
        제목 전용 서체 토큰(--font-display = IBM Plex Sans KR)으로 통일한다.
        text-transform:uppercase 는 한글에 아무 효과가 없어 제거. */
     font-family: var(--font-display);
-    /* 태블릿~작은 데스크톱: 48px (레퍼런스 동일). 폰은 아래에서 36px 로 줄인다 */
-    font-size: 3rem;
+    font-size: var(--fz-menu-main);
     padding: 2vh 4vw 2vh 8vw;
     font-weight: var(--fw-semibold);
     letter-spacing: -0.03em;
@@ -383,7 +404,7 @@
 
   .nav-list:not(.is-desktop) .mobile-submenu li a {
     font-family: var(--font-base);
-    font-size: 0.9375rem;   /* 15px */
+    font-size: var(--fz-menu-sub);
     color: #111;
     text-decoration: none;
     font-weight: var(--fw-medium);
@@ -396,14 +417,6 @@
     color: #2e7d32;
   }
 
-}
-
-/* 휴대폰 폭에서는 대메뉴를 36px 로 (레퍼런스와 동일한 분기) */
-@media (max-width: 812px) {
-  .nav-list:not(.is-desktop) .menu-title-btn,
-  .nav-list:not(.is-desktop) > ul > li > a {
-    font-size: 2.25rem;   /* 36px */
-  }
 }
 
 /* --- [수정 반영] 데스크톱 전체 화면 메뉴 --- */
@@ -436,15 +449,16 @@
 
 .nav-list.is-desktop .menu-wrapper > ul > li {
   position: relative;
-  padding: 3vh 12vw;
+  /* 세로 여백은 화면 높이를 따르되, 낮은/높은 화면에서 과하게 좁아지거나 벌어지지 않게 묶는다 */
+  padding: clamp(16px, 3vh, 36px) 12vw;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* 폭이 좁아지면 좌우 여백과 글자 크기를 줄인다 */
+/* 폭이 좁아지면 좌우 여백을 줄인다 */
 @media (max-width: 1399px) {
   .nav-list.is-desktop .menu-wrapper > ul > li {
-    padding: 2vh 4vw 2vh 8vw;
+    padding: clamp(16px, 3vh, 36px) 4vw clamp(16px, 3vh, 36px) 8vw;
   }
 }
 
@@ -454,15 +468,15 @@
 }
 
 .nav-list.is-desktop .main-menu-item {
-  width: 530px;
+  /* 고정 530px 대신 글자 크기 기준 — 대메뉴가 작아지면 소메뉴와의 간격도 같이 줄어든다 */
+  min-width: 5.5em;
   /* [수정] 'Playfair Display'(미로드 라틴 전용 서체)
      → 제목 전용 서체 토큰(--font-display = IBM Plex Sans KR)으로 통일.
      한글에 무효한 text-transform:uppercase 제거,
      한글에 벌어져 보이던 letter-spacing:1px → 음수 자간으로 조정. */
   font-family: var(--font-display);
-  /* 1440px 에서 72px (레퍼런스와 동일), 좁아지면 38.4px 까지 축소 */
-  font-size: clamp(2.4rem, 5vw, 4.5rem);
-  /* 72px 한글을 Bold(700)로 쓰면 지나치게 무겁다 → SemiBold(600) */
+  font-size: var(--fz-menu-main);
+  /* 큰 한글을 Bold(700)로 쓰면 지나치게 무겁다 → SemiBold(600) */
   font-weight: var(--fw-semibold);
   letter-spacing: -0.035em;
   line-height: 1.15;
@@ -485,15 +499,15 @@
   /* 한글 서브메뉴 라벨이 길어 한 줄을 넘칠 수 있으므로 wrap 은 유지한다
      (레퍼런스는 영문 단문이라 nowrap 이어도 문제가 없었다) */
   flex-wrap: wrap;
-  gap: 12px 3.5vw;
+  /* 큰 모니터에서 항목 간격이 과하게 벌어지지 않도록 상한을 둔다 */
+  gap: 12px clamp(16px, 2.5vw, 40px);
   list-style: none;
   flex: 1;
 }
 
 .nav-list.is-desktop .submenu li a {
   font-family: var(--font-base);
-  /* 1440px 에서 20px */
-  font-size: var(--fz-h6);
+  font-size: var(--fz-menu-sub);
   font-weight: var(--fw-medium);
   letter-spacing: -0.02em;
   color: #111;

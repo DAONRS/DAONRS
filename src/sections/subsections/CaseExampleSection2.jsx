@@ -257,6 +257,12 @@ const CaseExampleSection = forwardRef((props, ref) => {
                                     <div key={item.id} className="case-card" onClick={() => openDetail(item)}>
                                         <div className="case-card-thumbnail">
                                             <img src={getThumbnail(item.content)} alt={item.title} />
+                                        </div>
+                                        <div className="case-card-info">
+                                            <div className="case-card-text">
+                                                <h4 className="case-card-title">{item.title}</h4>
+                                                <span className="case-card-date">{item.date}</span>
+                                            </div>
                                             {sourceUrl && (
                                                 <a
                                                     href={sourceUrl}
@@ -273,10 +279,6 @@ const CaseExampleSection = forwardRef((props, ref) => {
                                                     </svg>
                                                 </a>
                                             )}
-                                        </div>
-                                        <div className="case-card-info">
-                                            <h4 className="case-card-title">{item.title}</h4>
-                                            <span className="case-card-date">{item.date}</span>
                                         </div>
                                     </div>
                                 );
